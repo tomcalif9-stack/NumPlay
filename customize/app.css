@@ -42,7 +42,7 @@ main {
   grid-template-rows: auto 1fr; grid-template-areas: "head device side" "games device side";
   min-height: 100vh;
 }
-.head { grid-area: head; display: grid; grid-template-columns: minmax(0, 1fr); gap: 4px 18px; padding: 40px 20px 0 48px; container-type: inline-size; }
+.head { grid-area: head; position: relative; z-index: 26; display: grid; grid-template-columns: minmax(0, 1fr); gap: 4px 18px; padding: 40px 20px 0 48px; container-type: inline-size; }
 .top { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; }  /* (the chips go under the name when they don't fit beside it) */
 .games { grid-area: games; display: flex; flex-direction: column; gap: 14px; padding: 28px 20px 28px 48px; }
 .side { grid-area: side; display: flex; flex-direction: column; gap: 14px; padding: 46px 40px 28px 8px; }
