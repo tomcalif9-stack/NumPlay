@@ -1078,20 +1078,30 @@
   }
   function placePop() {
     const pop = popOpen, [chip, side] = popAt;
-    const r = chip.getBoundingClientRect(), w = pop.offsetWidth, h = pop.offsetHeight;
+    const r = chip.getBoundingClientRect();
+    const margin = 12;
+    const vw = document.documentElement.clientWidth || innerWidth;
+    const vh = document.documentElement.clientHeight || innerHeight;
+    // Keep tall panels scrollable and fully inside the visible viewport (especially on phones).
+    pop.style.maxHeight = Math.max(160, vh - margin * 2) + 'px';
+    const w = Math.min(pop.offsetWidth, vw - margin * 2);
+    const h = Math.min(pop.offsetHeight, vh - margin * 2);
+    const clamp = (v, min, max) => Math.max(min, Math.min(Math.max(min, max), v));
     if (pop.id === 'theme-pop') {
       const below = r.bottom + 10;
-      pop.style.left = Math.max(12, Math.min(innerWidth - w - 12, r.left + r.width / 2 - w / 2)) + 'px';
-      pop.style.top = below + h <= innerHeight - 12 ? below + 'px' : Math.max(12, r.top - h - 10) + 'px';
+      pop.style.left = clamp(r.left + r.width / 2 - w / 2, margin, vw - w - margin) + 'px';
+      pop.style.top = (below + h <= vh - margin ? below : clamp(r.top - h - 10, margin, vh - h - margin)) + 'px';
       return;
     }
-    if (side && r.right + 16 + w < innerWidth - 12) {  // (beside it, over the calculator, not over the games)
+    if (side && r.right + 16 + w <= vw - margin) {
       pop.style.left = (r.right + 16) + 'px';
-      pop.style.top = Math.max(12, Math.min(innerHeight - h - 12, r.bottom - h)) + 'px';
+      pop.style.top = clamp(r.bottom - h, margin, vh - h - margin) + 'px';
       return;
     }
-    pop.style.left = Math.max(12, Math.min(innerWidth - w - 12, r.left + r.width / 2 - w / 2)) + 'px';
-    pop.style.top = (r.top - h - 12 < 12 ? r.bottom + 12 : r.top - h - 12) + 'px';
+    pop.style.left = clamp(r.left + r.width / 2 - w / 2, margin, vw - w - margin) + 'px';
+    const above = r.top - h - margin;
+    const below = r.bottom + margin;
+    pop.style.top = (above >= margin ? above : clamp(below, margin, vh - h - margin)) + 'px';
   }
   function closePops() {
     for (const p of document.querySelectorAll('.pop')) p.hidden = true;
