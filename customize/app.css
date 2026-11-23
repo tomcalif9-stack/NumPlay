@@ -49,7 +49,7 @@ main {
 .title { margin: 0; font-size: clamp(40px, 15cqw, 66px); font-weight: 800; letter-spacing: -0.045em; line-height: 1; }
 .title button { border: 0; padding: 0 0.04em 0.06em 0; background: none; font: inherit; letter-spacing: inherit; cursor: pointer; display: block; overflow: hidden; }
 .title span { display: block; }
-.chips { display: flex; gap: 8px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; min-width: 0; max-width: 100%; }
 .search {
   grid-column: 1 / -1; margin-top: 14px; max-width: 360px; height: 42px; padding: 0 14px; border-radius: 21px;
   background: var(--card); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); display: flex; align-items: center; gap: 9px;
@@ -532,7 +532,7 @@ html.intro-wait main { opacity: 0; }
 
 
 /* ---- full calculator operating-system builder in Studio */
-.os-pop { width: min(560px, calc(100vw - 24px)); max-height: min(82vh, 760px); overflow-y: auto; gap: 13px; z-index: 110; }
+.os-pop { width: min(560px, calc(100vw - 24px)); max-width: calc(100vw - 24px); max-height: calc(100vh - 24px); overflow-y: auto; overflow-x: hidden; box-sizing: border-box; gap: 13px; z-index: 110; }
 .os-heading { display:flex; flex-direction:column; gap:4px; }
 .os-heading b { font-size:16px; }
 .os-heading span, .os-config small, .os-preserve small, .os-upload small { color:var(--mute); font-size:12px; line-height:1.4; }
@@ -550,3 +550,8 @@ html.intro-wait main { opacity: 0; }
 .os-build-status { border-left:3px solid var(--blue); padding:9px 12px; background:var(--bg); font-size:12px; line-height:1.5; }
 .os-build-status p { margin:5px 0 0; color:var(--text); }
 @media(max-width:520px) { .os-pop { width:calc(100vw - 24px); } .os-config { grid-template-columns:1fr; } }
+
+/* Keep the Studio controls inside their header and the OS panel inside the viewport. */
+.top, .head, .chips { min-width: 0; max-width: 100%; }
+.os-config > label, .os-upload, .os-preserve { min-width: 0; overflow-wrap: anywhere; }
+.os-config .field { width: 100%; box-sizing: border-box; }
