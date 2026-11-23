@@ -73,6 +73,23 @@ d'une icône Matrices dans le menu.
 - Les libellés et icônes doivent être compréhensibles même sans connaître la
   console dont le style s'inspire.
 
+## Ordre de prototypage
+
+1. **Switch-OS comme première référence visuelle** : son accueil distingue déjà
+   les grandes vignettes de jeux des raccourcis d'applications natives. On
+   réorganisera ces raccourcis pour rendre Calculs, Matrices et Python visibles.
+2. **PSP-OS comme deuxième référence** : son classement par catégories est utile
+   pour séparer Calcul, Graphes, Outils et Jeux.
+3. **3DS-OS comme piste de présentation** : son carrousel et ses raccourcis
+   peuvent inspirer une navigation plus compacte.
+4. **Wii U-OS comme référence de tuiles** : on retiendra la présentation en
+   pages, pas les services fictifs ou non disponibles sur la calculatrice
+   (réseau social, boutique, navigateur ou fonctions système simulées).
+
+Ce classement est un ordre d'étude, pas une décision de copier les patchs. La
+première implémentation devra être originale ou couverte par une autorisation
+de réutilisation explicite.
+
 ## Architecture cible
 
 1. **Studio** : choix explicite de l'interface Epsilon, séparé du thème visuel de
