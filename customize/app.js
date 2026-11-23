@@ -1137,7 +1137,6 @@
     $('#secret-row').hidden = st.app.open !== 'matrices';
     $('#secret').value = String(st.app.secret);
     $('#hint').checked = st.app.hint;
-    $('#theme').value = String(st.app.theme);
     const langs = $('#langs');
     langs.textContent = '';
     for (const l of kit.langs) {
@@ -2283,8 +2282,6 @@
     SECRETS.forEach((s, i) => { const o = el('option', '', { value: String(i) }); o.textContent = s; sec.appendChild(o); });
     sec.addEventListener('change', () => { st.app.secret = +sec.value; render(); });
     $('#hint').addEventListener('change', (e) => { st.app.hint = e.target.checked; render(); });
-    $('#theme').addEventListener('change', (e) => { st.app.theme = Math.max(0, Math.min(5, +e.target.value || 0)); renderThemeOptions(); render(); });
-    renderThemeOptions();
     $('#app-name').addEventListener('input', (e) => { st.app.name = e.target.value.slice(0, 20); render(); });
     for (const b of document.querySelectorAll('[data-open]'))
       b.addEventListener('click', () => { st.app.open = b.dataset.open; renderApp(); render(); });
