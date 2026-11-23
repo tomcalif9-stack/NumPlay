@@ -82,7 +82,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          kit=$(gh api "repos/$GITHUB_REPOSITORY/commits/kit" --jq .commit.message 2>/dev/null | grep -o '[0-9a-f]\\{40\\}' | tail -1)
+          kit=$(gh api "repos/$GITHUB_REPOSITORY/commits/kit" --jq .commit.message 2>/dev/null | grep -oE '[0-9a-f]{40}' | tail -1)
           if [ -n "$kit" ]; then
             how=$(gh api "repos/$GITHUB_REPOSITORY/compare/$kit...$GITHUB_SHA" --jq .status 2>/dev/null || echo unknown)
             if [ "$how" != ahead ]; then
@@ -94,8 +94,7 @@ jobs:
           cd build/data/site-kit
           git init -q -b kit
           git add -A
-          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \\
-            commit -q -m "Kit of NumPlay $(tr -d '[:space:]' < ../../../VERSION), from $GITHUB_SHA"
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com"  commit -q -m "Kit of NumPlay $(tr -d '[:space:]' < ../../../VERSION), from $GITHUB_SHA"
           git push -q -f "https://x-access-token:$GH_TOKEN@github.com/$GITHUB_REPOSITORY.git" kit
 
   publish:
