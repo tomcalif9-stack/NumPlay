@@ -292,7 +292,7 @@ body.dragging .drop-hint { display: flex; }
 .other .cap-of { white-space: pre-line; text-align: center; line-height: 1.3; }
 .install:disabled { background: var(--track); color: var(--mute); cursor: default; }
 .install.busy { cursor: progress; opacity: 0.6; }
-.other .calc, .other #app-chip, .other #lang-chip, .other #theme-chip, .other #space-chip, .other .retro, .other #dock-download { display: none !important; }
+.other .calc, .other #app-chip, .other #lang-chip, .other #theme-chip, .other #os-chip, .other #space-chip, .other .retro, .other #dock-download { display: none !important; }
 .other .title button { cursor: default; }
 .app.away { display: none; }
 .step-icon.n { font-size: 17px; font-weight: 750; }
