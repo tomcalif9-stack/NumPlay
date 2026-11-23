@@ -306,6 +306,13 @@ python3 tools/new_game.py "My Game"
 
 Read **[Make your own NumWorks game](docs/make-a-game.md)** to go from there, and **[Contributing](CONTRIBUTING.md)** if you'd like to help with NumPlay itself.
 
+## Console-style Epsilon interfaces
+
+The console-style NumPlay themes change the NumPlay app only. A separate project is
+needed to change Epsilon's actual home screen and build a custom firmware. The
+technical scope and requirements are tracked in
+[the Epsilon console OS plan](docs/epsilon-console-os.md).
+
 ## Roadmap
 
 [Vote](https://github.com/Mason363/NumPlay/issues?q=is%3Aissue+is%3Aopen+label%3A%22on+roadmap%22+sort%3Areactions-%2B1-desc) with a 👍 on the game you want next. The most voted come first.
