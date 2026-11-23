@@ -56,10 +56,14 @@ sans supposer qu'un thème CSS de NumPlay suffit à modifier le firmware.
   quatre projets de référence vérifient que le dépôt de compilation est privé.
   Notre dépôt public NumPlay ne doit donc pas contenir une copie du code source
   Epsilon ni les firmwares compilés.
-- Dans Epsilon, les matrices sont gérées depuis l'application Calculs
-  (notamment `epsilon/apps/calculation/additional_results/matrix_list_controller.cpp`).
-  Le code Python est dans `epsilon/apps/code/`. Ces chemins sont des points
-  de contrôle à préserver lors de l'adaptation de l'accueil.
+- Dans Epsilon, les résultats matriciels et leurs propriétés sont traités
+  dans l'application Calculs (notamment
+  `epsilon/apps/calculation/additional_results/matrix_list_controller.cpp`).
+  Le code Python est dans `epsilon/apps/code/`, avec un navigateur de variables
+  et de scripts. Ces chemins sont des points de contrôle à préserver. **Cette
+  inspection ne prouve pas encore** que le parcours précis « image enregistrée
+  dans une matrice puis relue depuis Python » fonctionne : il reste un test
+  fonctionnel obligatoire, à réaliser avec un exemple concret.
 - Switch-OS construit sa liste à partir des applications natives d'AppsContainer
   et ajoute les applications externes séparément comme jeux. 3DS-OS déclare
   explicitement des entrées natives comme Calculs, Fonctions, Équations,
