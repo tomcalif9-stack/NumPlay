@@ -33,7 +33,7 @@ jobs:
         run: |
           stars=$(gh api "repos/$GITHUB_REPOSITORY" --jq .stargazers_count)
           downloads=$(gh api --paginate "repos/$GITHUB_REPOSITORY/releases?per_page=100" --jq '.[].assets[].download_count' | awk '{s += $1} END {print s + 0}')
-          version=$(gh api "repos/$GITHUB_REPOSITORY/releases/latest" --jq .tag_name)
+          version=$(gh api "repos/$GITHUB_REPOSITORY/releases/latest" --jq .tag_name 2>/dev/null || tr -d '[:space:]' < VERSION)
           python3 tools/badges.py --downloads "$downloads" --stars "$stars" --version "$version" --out docs/badges
           cat docs/badges/*.json
       - name: NumPlay Studio's kit
