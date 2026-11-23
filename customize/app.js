@@ -299,7 +299,7 @@
     $('#space-chip').dataset.tip = SPACES[space().id] + '|your calculator\'s space for apps';
     // (a game on its own has its own icon, name and language)
     const s = solo(), file = s ? game(s).alone.file : rgAlone() ? 'RetroGo.nwa' : 'NumPlay.nwa';
-    for (const c of [$('#app-chip'), $('#lang-chip'), $('#theme-chip')]) c.disabled = !!s;
+    for (const c of [$('#app-chip'), $('#lang-chip')]) c.disabled = !!s;
     $('#download').setAttribute('aria-label', 'Download ' + file);
     $('#download').dataset.tip = 'Download ' + file;
     $('#dock-download').setAttribute('aria-label', 'Download ' + file);
@@ -1305,39 +1305,6 @@
       : 'No extra .nwa files selected.';
   }
 
-  function renderThemeOptions() {
-    const box = $('#theme-options');
-    if (!box) return;
-    box.textContent = '';
-    const themes = [
-      ['NumPlay', 'numplay', 'Classic grid'],
-      ['Nintendo Switch', 'switch', 'Joy-Con inspired'],
-      ['PlayStation 5', 'playstation', 'Modern console'],
-      ['Xbox', 'xbox', 'Game tiles'],
-      ['Wii', 'wii', 'Channel menu'],
-      ['Wii U', 'wii-u', 'Colorful tiles'],
-    ];
-    for (const [i, item] of themes.entries()) {
-      const [name, style, note] = item;
-      const b = el('button', 'theme-option', { type: 'button', role: 'radio', 'aria-checked': st.app.theme === i ? 'true' : 'false' });
-      const screen = el('span', 'theme-screen theme-screen--' + style);
-      screen.innerHTML = '<span class="theme-screen-top"><span>NUMPLAY</span><span>● ● ●</span></span><span class="theme-screen-title">' +
-        (i === 0 ? 'Home' : i === 1 ? 'Play' : i === 2 ? 'What\'s new' : i === 3 ? 'My games' : i === 4 ? 'Wii Menu' : 'Menu') +
-        '</span><span class="theme-screen-grid"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>';
-      b.appendChild(screen);
-      const label = el('span', 'theme-option-name');
-      label.appendChild(el('span')).textContent = name;
-      label.appendChild(el('small')).textContent = note;
-      b.appendChild(label);
-      b.addEventListener('click', () => {
-        st.app.theme = i;
-        $('#theme').value = String(i);
-        renderThemeOptions();
-        render();
-      });
-      box.appendChild(b);
-    }
-  }
 
   function renderCalcs() {
     const box = $('#calcs');
@@ -2327,7 +2294,6 @@
     $('#calc-chip').addEventListener('click', (e) => { renderCalcs(); openPop($('#calc-pop'), e.currentTarget); });
     $('#app-chip').addEventListener('click', (e) => { renderApp(); openPop($('#app-pop'), e.currentTarget); });
     $('#lang-chip').addEventListener('click', (e) => { renderApp(); openPop($('#lang-pop'), e.currentTarget); });
-    $('#theme-chip').addEventListener('click', (e) => { renderThemeOptions(); openPop($('#theme-pop'), e.currentTarget); });
     $('#os-chip').addEventListener('click', (e) => { renderOsPanel(); openPop($('#os-pop'), e.currentTarget, true); });
     for (const b of document.querySelectorAll('[data-os]')) b.addEventListener('click', () => {
       osState.style = b.dataset.os;
