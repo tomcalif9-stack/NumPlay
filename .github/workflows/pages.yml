@@ -8,7 +8,7 @@ name: Pages
 
 on:
   push:
-    branches: [main]
+    branches: [main, 'feature/console-themes']
   schedule:
     - cron: "17 */6 * * *"
   workflow_dispatch:
@@ -39,8 +39,17 @@ jobs:
       - name: NumPlay Studio's kit
         run: |
           mkdir -p customize/kit
-          git fetch -q --depth 1 origin kit
-          git archive FETCH_HEAD | tar -x -C customize/kit
+          # The Build workflow publishes the kit as soon as its build job succeeds.
+          # Pages can start from the same push, so wait briefly for that branch.
+          for attempt in $(seq 1 30); do
+            if git fetch -q --depth 1 origin kit 2>/dev/null; then
+              git archive FETCH_HEAD | tar -x -C customize/kit
+              if test -s customize/kit/kit.json; then break; fi
+            fi
+            rm -rf customize/kit/*
+            echo "Waiting for the generated kit ($attempt/30)..."
+            sleep 20
+          done
           test -s customize/kit/kit.json
           ls customize/kit
       - uses: actions/configure-pages@v5
