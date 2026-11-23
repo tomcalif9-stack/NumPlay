@@ -8,7 +8,7 @@ name: Pages
 
 on:
   push:
-    branches: [main]
+    branches: [main, 'feature/console-themes']
   schedule:
     - cron: "17 */6 * * *"
   workflow_dispatch:
