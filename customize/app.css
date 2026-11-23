@@ -491,3 +491,41 @@ html.intro-wait main { opacity: 0; }
   .grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
   .pop { width: calc(100vw - 32px); }
 }
+
+
+/* ---- home theme picker: visual previews, like the calculator picker */
+.theme-pop { width: min(620px, calc(100vw - 24px)); max-height: min(76vh, 680px); overflow-y: auto; gap: 12px; }
+.theme-heading { display: flex; flex-direction: column; gap: 3px; padding: 2px 2px 4px; }
+.theme-heading b { font-size: 15px; }
+.theme-heading span { color: var(--mute); font-size: 12px; }
+.theme-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.theme-option { min-width: 0; padding: 8px; border: 1px solid #dedfe3; border-radius: 13px; background: #f7f7f8; text-align: left; cursor: pointer; }
+.theme-option[aria-checked="true"] { border: 2px solid var(--blue); padding: 7px; background: #eef6ff; }
+.theme-option-name { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-top: 7px; font-size: 12px; font-weight: 700; }
+.theme-option-name small { color: var(--mute); font-size: 10px; font-weight: 600; }
+.theme-screen { display: block; position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 8px; padding: 9px; color: white; background: #252a38; }
+.theme-screen-top { display: flex; align-items: center; justify-content: space-between; font-size: 7px; font-weight: 700; opacity: .9; }
+.theme-screen-title { margin: 9px 0 7px; font-size: 11px; font-weight: 800; letter-spacing: -.3px; }
+.theme-screen-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
+.theme-screen-grid i { display: block; aspect-ratio: 1; border-radius: 5px; background: rgba(255,255,255,.22); box-shadow: inset 0 0 0 1px rgba(255,255,255,.16); }
+.theme-screen-grid i:nth-child(2n) { background: rgba(255,255,255,.36); }
+.theme-screen--switch { background: linear-gradient(135deg,#e84c54,#8b263d 52%,#242938); }
+.theme-screen--switch .theme-screen-grid i { border-radius: 50%; }
+.theme-screen--playstation { background: radial-gradient(ellipse at 70% 30%,#28518a,#101c36 70%); }
+.theme-screen--playstation .theme-screen-title { font-size: 14px; font-weight: 500; }
+.theme-screen--xbox { background: linear-gradient(135deg,#102d22,#147b43); }
+.theme-screen--xbox .theme-screen-grid { grid-template-columns: 1.5fr 1fr 1fr 1fr; }
+.theme-screen--xbox .theme-screen-grid i:first-child { grid-row: span 2; }
+.theme-screen--wii { background: linear-gradient(135deg,#d9f3fa,#8abed1); color: #31566a; }
+.theme-screen--wii .theme-screen-grid i { background: #fff; box-shadow: 0 1px 3px #7da5b2; border-radius: 3px; }
+.theme-screen--wii-u { background: linear-gradient(135deg,#1c214e,#394e9b); }
+.theme-screen--wii-u .theme-screen-grid { grid-template-columns: repeat(3, 1fr); }
+.theme-screen--wii-u .theme-screen-grid i { border-radius: 2px; }
+.theme-value { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+@media (max-width: 520px) {
+  .theme-pop { width: calc(100vw - 24px); padding: 12px; }
+  .theme-options { gap: 7px; }
+  .theme-option { padding: 6px; }
+  .theme-option[aria-checked="true"] { padding: 5px; }
+  .theme-screen { padding: 7px; }
+}
