@@ -42,8 +42,6 @@ jobs:
           if git fetch -q --depth 1 origin kit; then git archive FETCH_HEAD | tar -x -C customize/kit; ls customize/kit
           else echo "(no kit yet)"; fi
       - uses: actions/configure-pages@v5
-        with:
-          enablement: true
       - uses: actions/jekyll-build-pages@v1
         with:
           source: ./
