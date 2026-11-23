@@ -2156,7 +2156,6 @@
       anim(b, [{ opacity: 0, translate: '18px 0' }, { opacity: 1, translate: '0 0' }], { duration: 800, delay: S + 80 + i * 26, easing: E.out }));
     function finish(e) {
       // (a click that ends it is only that: it doesn't also pick the game under it)
-      if (e && e.type === 'pointerdown') addEventListener('click', (c) => { c.stopPropagation(); c.preventDefault(); }, { capture: true, once: true });
       cancelAnimationFrame(raf);
       for (const a of anims) a.finish();
       for (const fl of flyers) fl.f.remove();
@@ -2385,5 +2384,9 @@
     stars();
     if (!other()) (window.requestIdleCallback || setTimeout)(() => loadTools().catch(() => {}), { timeout: 3000 });
   }
-  start();
+  start().catch((e) => {
+    console.error('NumPlay Studio failed to start', e);
+    document.documentElement.classList.remove('intro-wait');
+    toast('Studio startup failed: ' + (e && e.message ? e.message : 'unknown error'));
+  });
 })();
