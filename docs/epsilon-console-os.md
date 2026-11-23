@@ -42,6 +42,38 @@ Les interfaces PlayStation 5, Xbox et Wii n'ont pas encore de base Epsilon
 équivalente validée dans cette étude. Elles devront être développées séparément,
 sans supposer qu'un thème CSS de NumPlay suffit à modifier le firmware.
 
+## Vérification du code de référence (23 novembre 2026)
+
+- Le commit Epsilon épinglé par les quatre projets est
+  [`ea4d93bac83ccdf2ab7bc562e994408f3be11d60`](https://github.com/numworks/epsilon/commit/ea4d93bac83ccdf2ab7bc562e994408f3be11d60),
+  daté du 12 octobre 2026.
+- Dans ce commit, le Makefile Epsilon porte `APP_VERSION := 26.1.0`.
+  Les quatre patchs modifient cette ligne en `26.4.0`. C'est un changement
+  de numéro de version dans le build ; ce n'est pas une preuve que chaque
+  changement interne d'Epsilon 26.4 est compatible.
+- Le dépôt officiel Epsilon ne déclare pas de licence SPDX dans ses métadonnées
+  GitHub et son README indique « All rights reserved ». Les workflows des
+  quatre projets de référence vérifient que le dépôt de compilation est privé.
+  Notre dépôt public NumPlay ne doit donc pas contenir une copie du code source
+  Epsilon ni les firmwares compilés.
+- Dans Epsilon, les matrices sont gérées depuis l'application Calculs
+  (notamment `epsilon/apps/calculation/additional_results/matrix_list_controller.cpp`).
+  Le code Python est dans `epsilon/apps/code/`. Ces chemins sont des points
+  de contrôle à préserver lors de l'adaptation de l'accueil.
+- Switch-OS construit sa liste à partir des applications natives d'AppsContainer
+  et ajoute les applications externes séparément comme jeux. 3DS-OS déclare
+  explicitement des entrées natives comme Calculs, Fonctions, Équations,
+  Statistiques, Python et Paramètres. Cela confirme que ces interfaces ne
+  remplacent pas toutes les applications par des jeux, mais il reste à tester
+  les parcours de données réels, en particulier les images enregistrées en
+  matrices et réutilisées depuis Python.
+
+Sources vérifiées : [dépôt Epsilon](https://github.com/numworks/epsilon),
+[patch Switch-OS](https://github.com/derim00/switch-os/blob/main/patches/switch-os-epsilon.patch),
+[patch PSP-OS](https://github.com/derim00/psp-os/blob/main/patches/psp-os-epsilon.patch),
+[patch Wii U-OS](https://github.com/derim00/wiiu-os/blob/main/patches/wiiu-os-epsilon.patch),
+[patch 3DS-OS](https://github.com/derim00/3ds-os/blob/main/patches/3ds-os-epsilon.patch).
+
 ## Règles fonctionnelles non négociables
 
 L'accueil doit présenter les fonctions de calcul au même niveau de soin que les
