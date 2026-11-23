@@ -66,6 +66,38 @@ jobs:
       - name: Test
         run: python3 tests/ci.py --shard ${{ matrix.shard }} --of 8
 
+  # Publish the generated Studio kit as soon as the build is ready; don't make the
+  # website wait for all eight independent test shards.
+  publish-kit:
+    needs: build
+    if: (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/console-themes' || startsWith(github.ref, 'refs/tags/v')) && github.event_name != 'pull_request'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: release
+          path: build
+
+      - name: Publish Studio kit
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          kit=$(gh api "repos/$GITHUB_REPOSITORY/commits/kit" --jq .commit.message 2>/dev/null | grep -o '[0-9a-f]\\{40\\}' | tail -1)
+          if [ -n "$kit" ]; then
+            how=$(gh api "repos/$GITHUB_REPOSITORY/compare/$kit...$GITHUB_SHA" --jq .status 2>/dev/null || echo unknown)
+            if [ "$how" != ahead ]; then
+              echo "(the kit is from $kit, which this commit isn't newer than: $how)"
+              exit 0
+            fi
+          fi
+          test -s build/data/site-kit/kit.json
+          cd build/data/site-kit
+          git init -q -b kit
+          git add -A
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \\
+            commit -q -m "Kit of NumPlay $(tr -d '[:space:]' < ../../../VERSION), from $GITHUB_SHA"
+          git push -q -f "https://x-access-token:$GH_TOKEN@github.com/$GITHUB_REPOSITORY.git" kit
+
   publish:
     needs: [build, test]
     if: (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/console-themes' || startsWith(github.ref, 'refs/tags/v')) && github.event_name != 'pull_request'
@@ -81,30 +113,6 @@ jobs:
         with:
           name: release
           path: build
-
-      - name: Kit for the website
-        env:
-          GH_TOKEN: ${{ github.token }}
-        # NumPlay Studio (customize/) links a NumPlay of your own from the kit (make kit): it goes on the
-        # branch "kit", one commit, and the site is deployed again with it. Any run of a commit newer than the
-        # kit's makes it, so the Studio has every game as soon as one build of it ends; a run of an older commit
-        # that ends last leaves the newer kit alone
-        run: |
-          kit=$(gh api "repos/$GITHUB_REPOSITORY/commits/kit" --jq .commit.message 2>/dev/null | grep -o '[0-9a-f]\{40\}' | tail -1)
-          if [ -n "$kit" ]; then
-            how=$(gh api "repos/$GITHUB_REPOSITORY/compare/$kit...$GITHUB_SHA" --jq .status 2>/dev/null || echo unknown)
-            if [ "$how" != ahead ]; then
-              echo "(the kit is from $kit, which this commit isn't newer than: $how)"
-              exit 0
-            fi
-          fi
-          cd build/data/site-kit
-          git init -q -b kit
-          git add -A
-          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
-            commit -q -m "Kit of NumPlay $(tr -d '[:space:]' < ../../../VERSION), from $GITHUB_SHA"
-          git push -q -f "https://x-access-token:$GH_TOKEN@github.com/$GITHUB_REPOSITORY.git" kit
-          gh workflow run pages.yml --ref "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" || echo "(the site was not deployed again)"
 
       - name: Release
         if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
