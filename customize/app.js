@@ -1079,6 +1079,12 @@
   function placePop() {
     const pop = popOpen, [chip, side] = popAt;
     const r = chip.getBoundingClientRect(), w = pop.offsetWidth, h = pop.offsetHeight;
+    if (pop.id === 'theme-pop') {
+      const below = r.bottom + 10;
+      pop.style.left = Math.max(12, Math.min(innerWidth - w - 12, r.left + r.width / 2 - w / 2)) + 'px';
+      pop.style.top = below + h <= innerHeight - 12 ? below + 'px' : Math.max(12, r.top - h - 10) + 'px';
+      return;
+    }
     if (side && r.right + 16 + w < innerWidth - 12) {  // (beside it, over the calculator, not over the games)
       pop.style.left = (r.right + 16) + 'px';
       pop.style.top = Math.max(12, Math.min(innerHeight - h - 12, r.bottom - h)) + 'px';
@@ -1290,6 +1296,40 @@
     }
     render();
   }
+  function renderThemeOptions() {
+    const box = $('#theme-options');
+    if (!box) return;
+    box.textContent = '';
+    const themes = [
+      ['NumPlay', 'numplay', 'Classic grid'],
+      ['Nintendo Switch', 'switch', 'Joy-Con inspired'],
+      ['PlayStation 5', 'playstation', 'Modern console'],
+      ['Xbox', 'xbox', 'Game tiles'],
+      ['Wii', 'wii', 'Channel menu'],
+      ['Wii U', 'wii-u', 'Colorful tiles'],
+    ];
+    for (const [i, item] of themes.entries()) {
+      const [name, style, note] = item;
+      const b = el('button', 'theme-option', { type: 'button', role: 'radio', 'aria-checked': st.app.theme === i ? 'true' : 'false' });
+      const screen = el('span', 'theme-screen theme-screen--' + style);
+      screen.innerHTML = '<span class="theme-screen-top"><span>NUMPLAY</span><span>● ● ●</span></span><span class="theme-screen-title">' +
+        (i === 0 ? 'Home' : i === 1 ? 'Play' : i === 2 ? 'What\'s new' : i === 3 ? 'My games' : i === 4 ? 'Wii Menu' : 'Menu') +
+        '</span><span class="theme-screen-grid"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>';
+      b.appendChild(screen);
+      const label = el('span', 'theme-option-name');
+      label.appendChild(el('span')).textContent = name;
+      label.appendChild(el('small')).textContent = note;
+      b.appendChild(label);
+      b.addEventListener('click', () => {
+        st.app.theme = i;
+        $('#theme').value = String(i);
+        renderThemeOptions();
+        render();
+      });
+      box.appendChild(b);
+    }
+  }
+
   function renderCalcs() {
     const box = $('#calcs');
     box.textContent = '';
@@ -2258,7 +2298,8 @@
     SECRETS.forEach((s, i) => { const o = el('option', '', { value: String(i) }); o.textContent = s; sec.appendChild(o); });
     sec.addEventListener('change', () => { st.app.secret = +sec.value; render(); });
     $('#hint').addEventListener('change', (e) => { st.app.hint = e.target.checked; render(); });
-    $('#theme').addEventListener('change', (e) => { st.app.theme = Math.max(0, Math.min(5, +e.target.value || 0)); render(); });
+    $('#theme').addEventListener('change', (e) => { st.app.theme = Math.max(0, Math.min(5, +e.target.value || 0)); renderThemeOptions(); render(); });
+    renderThemeOptions();
     $('#app-name').addEventListener('input', (e) => { st.app.name = e.target.value.slice(0, 20); render(); });
     for (const b of document.querySelectorAll('[data-open]'))
       b.addEventListener('click', () => { st.app.open = b.dataset.open; renderApp(); render(); });
@@ -2277,7 +2318,7 @@
     $('#calc-chip').addEventListener('click', (e) => { renderCalcs(); openPop($('#calc-pop'), e.currentTarget); });
     $('#app-chip').addEventListener('click', (e) => { renderApp(); openPop($('#app-pop'), e.currentTarget); });
     $('#lang-chip').addEventListener('click', (e) => { renderApp(); openPop($('#lang-pop'), e.currentTarget); });
-    $('#theme-chip').addEventListener('click', (e) => { renderApp(); openPop($('#theme-pop'), e.currentTarget); });
+    $('#theme-chip').addEventListener('click', (e) => { renderThemeOptions(); openPop($('#theme-pop'), e.currentTarget); });
     document.addEventListener('pointerdown', (e) => {
       if (popOpen && !e.target.closest('.pop, .chip, .space-chip')) closePops();
     });
