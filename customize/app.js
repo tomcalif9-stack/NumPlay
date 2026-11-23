@@ -1128,7 +1128,6 @@
     $('#secret').value = String(st.app.secret);
     $('#hint').checked = st.app.hint;
     $('#theme').value = String(st.app.theme);
-    $('#theme-row').hidden = other();
     const langs = $('#langs');
     langs.textContent = '';
     for (const l of kit.langs) {
