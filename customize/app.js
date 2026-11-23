@@ -298,7 +298,7 @@
     $('#space-chip').dataset.tip = SPACES[space().id] + '|your calculator\'s space for apps';
     // (a game on its own has its own icon, name and language)
     const s = solo(), file = s ? game(s).alone.file : rgAlone() ? 'RetroGo.nwa' : 'NumPlay.nwa';
-    for (const c of [$('#app-chip'), $('#lang-chip')]) c.disabled = !!s;
+    for (const c of [$('#app-chip'), $('#lang-chip'), $('#theme-chip')]) c.disabled = !!s;
     $('#download').setAttribute('aria-label', 'Download ' + file);
     $('#download').dataset.tip = 'Download ' + file;
     $('#dock-download').setAttribute('aria-label', 'Download ' + file);
@@ -306,6 +306,7 @@
     $('#app-chip-icon').classList.toggle('custom', st.app.icon === 'custom');
     $('#app-chip').dataset.tip = (s ? byId[s].title : st.app.name.trim() || 'No name') + '|its icon and name on your calculator, and how it opens';
     $('#lang-chip').dataset.tip = LANGS[st.lang][1] + '|the language of its menus';
+    $('#theme-chip').dataset.tip = 'Home theme|the style of your calculator\'s home screen';
     $('#lang-chip-label').textContent = LANGS[st.lang][0];
     renderCarts();
     save();
@@ -2276,6 +2277,7 @@
     $('#calc-chip').addEventListener('click', (e) => { renderCalcs(); openPop($('#calc-pop'), e.currentTarget); });
     $('#app-chip').addEventListener('click', (e) => { renderApp(); openPop($('#app-pop'), e.currentTarget); });
     $('#lang-chip').addEventListener('click', (e) => { renderApp(); openPop($('#lang-pop'), e.currentTarget); });
+    $('#theme-chip').addEventListener('click', (e) => { renderApp(); openPop($('#theme-pop'), e.currentTarget); });
     document.addEventListener('pointerdown', (e) => {
       if (popOpen && !e.target.closest('.pop, .chip, .space-chip')) closePops();
     });
