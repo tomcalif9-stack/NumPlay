@@ -83,6 +83,7 @@
   let ports = null;        // kit/ports/ports.json: each other calculator's games, their files and sizes
   const kits = {};         // the kit of each language, loaded when picked
   const byId = {};
+  const osState = { style: store('numplay-os-style') || 'switch', model: store('numplay-os-model') || 'n0120', files: [] };
   const st = {
     picked: new Set(), order: [], roms: [], apps: [], carts: [], cap: 'std', lang: 'en',
     app: { icon: 'NumPlay', name: 'NumPlay', open: 'numplay', secret: 0, hint: true, theme: 0 },
@@ -1295,6 +1296,15 @@
     }
     render();
   }
+  function renderOsPanel() {
+    for (const b of document.querySelectorAll('[data-os]'))
+      b.setAttribute('aria-checked', b.dataset.os === osState.style ? 'true' : 'false');
+    $('#os-model').value = osState.model;
+    $('#os-files-status').textContent = osState.files.length
+      ? osState.files.length + ' .nwa file(s) selected: ' + osState.files.map(f => f.name).join(', ')
+      : 'No extra .nwa files selected.';
+  }
+
   function renderThemeOptions() {
     const box = $('#theme-options');
     if (!box) return;
@@ -2318,6 +2328,21 @@
     $('#app-chip').addEventListener('click', (e) => { renderApp(); openPop($('#app-pop'), e.currentTarget); });
     $('#lang-chip').addEventListener('click', (e) => { renderApp(); openPop($('#lang-pop'), e.currentTarget); });
     $('#theme-chip').addEventListener('click', (e) => { renderThemeOptions(); openPop($('#theme-pop'), e.currentTarget); });
+    $('#os-chip').addEventListener('click', (e) => { renderOsPanel(); openPop($('#os-pop'), e.currentTarget, true); });
+    for (const b of document.querySelectorAll('[data-os]')) b.addEventListener('click', () => {
+      osState.style = b.dataset.os;
+      store('numplay-os-style', osState.style);
+      renderOsPanel();
+    });
+    $('#os-model').addEventListener('change', (e) => {
+      osState.model = e.target.value;
+      store('numplay-os-model', osState.model);
+    });
+    $('#os-app-files').addEventListener('change', (e) => {
+      osState.files = [...e.target.files];
+      renderOsPanel();
+    });
+    renderOsPanel();
     document.addEventListener('pointerdown', (e) => {
       if (popOpen && !e.target.closest('.pop, .chip, .space-chip')) closePops();
     });
