@@ -198,17 +198,15 @@
   <div id="langs" class="segctl col" role="radiogroup" aria-label="Language"></div>
 </div>
 <div id="theme-pop" class="pop theme-pop" role="dialog" aria-label="Home screen theme" hidden>
-  <div id="theme-row" class="pop-row">
-    <label class="pop-label" for="theme">Home theme</label>
-    <select id="theme" class="field">
-      <option value="0">NumPlay</option>
-      <option value="1">Switch style</option>
-      <option value="2">PlayStation style</option>
-      <option value="3">Xbox style</option>
-      <option value="4">Wii style</option>
-      <option value="5">Wii U style</option>
-    </select>
+  <div class="theme-heading">
+    <b>Choose a home screen</b>
+    <span>Preview each style before selecting it</span>
   </div>
+  <div id="theme-options" class="theme-options" role="radiogroup" aria-label="Home screen theme"></div>
+  <select id="theme" class="theme-value" aria-label="Selected home screen theme" tabindex="-1">
+    <option value="0">NumPlay</option><option value="1">Switch style</option><option value="2">PlayStation style</option>
+    <option value="3">Xbox style</option><option value="4">Wii style</option><option value="5">Wii U style</option>
+  </select>
 </div>
 <div id="space-pop" class="pop space-pop" role="dialog" aria-labelledby="space-title" hidden>
   <b id="space-title" class="pop-title">Your calculator's space for apps</b>
