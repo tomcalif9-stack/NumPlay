@@ -529,3 +529,24 @@ html.intro-wait main { opacity: 0; }
   .theme-option[aria-checked="true"] { padding: 5px; }
   .theme-screen { padding: 7px; }
 }
+
+
+/* ---- full calculator operating-system builder in Studio */
+.os-pop { width: min(560px, calc(100vw - 24px)); max-height: min(82vh, 760px); overflow-y: auto; gap: 13px; z-index: 110; }
+.os-heading { display:flex; flex-direction:column; gap:4px; }
+.os-heading b { font-size:16px; }
+.os-heading span, .os-config small, .os-preserve small, .os-upload small { color:var(--mute); font-size:12px; line-height:1.4; }
+.os-choice { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+.os-choice button { display:flex; flex-direction:column; align-items:flex-start; gap:4px; min-width:0; padding:12px; border:1px solid var(--line); border-radius:12px; background:var(--bg); text-align:left; cursor:pointer; }
+.os-choice button[aria-checked="true"] { border:2px solid var(--blue); padding:11px; background:#eef6ff; }
+.os-choice small { color:var(--mute); font-size:11px; line-height:1.35; }
+.os-config { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.os-config label, .os-upload { display:flex; flex-direction:column; gap:6px; font-size:12px; font-weight:650; }
+.os-preserve { padding:12px; border-radius:12px; background:var(--bg); display:flex; flex-direction:column; gap:6px; font-size:12px; line-height:1.5; }
+.os-upload { border:1px dashed var(--line); border-radius:12px; padding:12px; cursor:pointer; }
+.os-upload input { max-width:100%; margin-top:5px; font-weight:400; }
+.os-upload span { display:flex; flex-direction:column; gap:3px; }
+.os-files-status { font-size:12px; color:var(--mute); overflow-wrap:anywhere; }
+.os-build-status { border-left:3px solid var(--blue); padding:9px 12px; background:var(--bg); font-size:12px; line-height:1.5; }
+.os-build-status p { margin:5px 0 0; color:var(--text); }
+@media(max-width:520px) { .os-pop { width:calc(100vw - 24px); } .os-config { grid-template-columns:1fr; } }
