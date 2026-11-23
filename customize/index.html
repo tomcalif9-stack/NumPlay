@@ -66,10 +66,6 @@
           <span id="lang-chip-label">EN</span>
           <svg class="caret" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
         </button>
-        <button id="theme-chip" type="button" class="chip lang theme-chip" aria-haspopup="dialog" aria-expanded="false" data-tip="The home screen style">
-          <span>Theme</span>
-          <svg class="caret" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-        </button>
         <button id="os-chip" type="button" class="chip lang os-chip" aria-haspopup="dialog" aria-expanded="false" data-tip="Choose and prepare a full calculator operating system">
           <span>Calculator OS</span>
           <svg class="caret" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
@@ -201,17 +197,6 @@
 <div id="lang-pop" class="pop narrow" role="dialog" aria-label="Language" hidden>
   <div id="langs" class="segctl col" role="radiogroup" aria-label="Language"></div>
 </div>
-<div id="theme-pop" class="pop theme-pop" role="dialog" aria-label="Home screen theme" hidden>
-  <div class="theme-heading">
-    <b>Choose a home screen</b>
-    <span>Preview each style before selecting it</span>
-  </div>
-  <div id="theme-options" class="theme-options" role="radiogroup" aria-label="Home screen theme"></div>
-  <select id="theme" class="theme-value" aria-label="Selected home screen theme" tabindex="-1">
-    <option value="0">NumPlay</option><option value="1">Switch style</option><option value="2">PlayStation style</option>
-    <option value="3">Xbox style</option><option value="4">Wii style</option><option value="5">Wii U style</option>
-  </select>
-</div>
 <div id="os-pop" class="pop os-pop" role="dialog" aria-label="Calculator operating system" hidden>
   <div class="os-heading">
     <b>Build your calculator OS</b>
@@ -228,7 +213,7 @@
       <select id="os-model" class="field"><option value="n0110">NumWorks N0110</option><option value="n0115">NumWorks N0115</option><option value="n0120" selected>NumWorks N0120</option></select>
     </label>
     <label>Firmware base
-      <select id="os-base" class="field"><option value="26.1.0">Epsilon commit base (26.1.0)</option></select>
+      <select id="os-base" class="field"><option value="26.4.0" selected>Epsilon 26.4.0 (latest supplied OS patches)</option></select>
     </label>
   </div>
   <div class="os-preserve">
