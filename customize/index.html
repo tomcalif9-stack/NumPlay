@@ -66,6 +66,10 @@
           <span id="lang-chip-label">EN</span>
           <svg class="caret" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
         </button>
+        <button id="theme-chip" type="button" class="chip lang theme-chip" aria-haspopup="dialog" aria-expanded="false" data-tip="The home screen style">
+          <span>Theme</span>
+          <svg class="caret" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
       </div>
     </div>
     <p id="lede" class="lede">Real games, rebuilt for the NumWorks. Choose yours and they go on your calculator as one app.</p>
@@ -186,6 +190,14 @@
     <select id="secret" class="field"></select>
     <label class="tick"><input id="hint" type="checkbox" checked> hint</label>
   </div>
+</div>
+<div id="calc-pop" class="pop calc-pop" role="dialog" aria-label="Your calculator" hidden>
+  <div id="calcs" class="segctl col calcs" role="radiogroup" aria-label="Your calculator"></div>
+</div>
+<div id="lang-pop" class="pop narrow" role="dialog" aria-label="Language" hidden>
+  <div id="langs" class="segctl col" role="radiogroup" aria-label="Language"></div>
+</div>
+<div id="theme-pop" class="pop theme-pop" role="dialog" aria-label="Home screen theme" hidden>
   <div id="theme-row" class="pop-row">
     <label class="pop-label" for="theme">Home theme</label>
     <select id="theme" class="field">
@@ -197,12 +209,6 @@
       <option value="5">Wii U style</option>
     </select>
   </div>
-</div>
-<div id="calc-pop" class="pop calc-pop" role="dialog" aria-label="Your calculator" hidden>
-  <div id="calcs" class="segctl col calcs" role="radiogroup" aria-label="Your calculator"></div>
-</div>
-<div id="lang-pop" class="pop narrow" role="dialog" aria-label="Language" hidden>
-  <div id="langs" class="segctl col" role="radiogroup" aria-label="Language"></div>
 </div>
 <div id="space-pop" class="pop space-pop" role="dialog" aria-labelledby="space-title" hidden>
   <b id="space-title" class="pop-title">Your calculator's space for apps</b>
