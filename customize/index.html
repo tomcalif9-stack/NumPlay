@@ -70,6 +70,10 @@
           <span>Theme</span>
           <svg class="caret" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
         </button>
+        <button id="os-chip" type="button" class="chip lang os-chip" aria-haspopup="dialog" aria-expanded="false" data-tip="Choose and prepare a full calculator operating system">
+          <span>Calculator OS</span>
+          <svg class="caret" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
       </div>
     </div>
     <p id="lede" class="lede">Real games, rebuilt for the NumWorks. Choose yours and they go on your calculator as one app.</p>
@@ -207,6 +211,40 @@
     <option value="0">NumPlay</option><option value="1">Switch style</option><option value="2">PlayStation style</option>
     <option value="3">Xbox style</option><option value="4">Wii style</option><option value="5">Wii U style</option>
   </select>
+</div>
+<div id="os-pop" class="pop os-pop" role="dialog" aria-label="Calculator operating system" hidden>
+  <div class="os-heading">
+    <b>Build your calculator OS</b>
+    <span>This changes the calculator firmware, not the NumPlay app theme.</span>
+  </div>
+  <div class="os-choice" role="radiogroup" aria-label="Operating system style">
+    <button type="button" data-os="switch" aria-checked="true" role="radio"><b>Switch-OS</b><small>Game tiles and native app shortcuts</small></button>
+    <button type="button" data-os="psp" aria-checked="false" role="radio"><b>PSP-OS</b><small>Horizontal categories and vertical lists</small></button>
+    <button type="button" data-os="wiiu" aria-checked="false" role="radio"><b>Wii U-OS</b><small>Pages of colourful tiles</small></button>
+    <button type="button" data-os="3ds" aria-checked="false" role="radio"><b>3DS-OS</b><small>Carousel and dual-area layout</small></button>
+  </div>
+  <div class="os-config">
+    <label>Calculator model
+      <select id="os-model" class="field"><option value="n0110">NumWorks N0110</option><option value="n0115">NumWorks N0115</option><option value="n0120" selected>NumWorks N0120</option></select>
+    </label>
+    <label>Firmware base
+      <select id="os-base" class="field"><option value="26.1.0">Epsilon commit base (26.1.0)</option></select>
+    </label>
+  </div>
+  <div class="os-preserve">
+    <b>Native calculator apps kept in the home menu</b>
+    <div>Calculs · Grapheur · Équations · Statistiques · Matrices · Python · Paramètres</div>
+    <small>Games and added .nwa apps stay in a separate section.</small>
+  </div>
+  <label class="os-upload">
+    <span><b>Add .nwa apps / games</b><small>These are packaged alongside the firmware, not converted into the OS.</small></span>
+    <input id="os-app-files" type="file" accept=".nwa" multiple>
+  </label>
+  <div id="os-files-status" class="os-files-status" aria-live="polite">No extra .nwa files selected.</div>
+  <div class="os-build-status" role="status">
+    <b>Firmware build connection</b>
+    <p>The Studio interface is ready for OS selection and configuration. Secure GitHub authorization and a private firmware-build runner still need to be connected before a real build can be started here.</p>
+  </div>
 </div>
 <div id="space-pop" class="pop space-pop" role="dialog" aria-labelledby="space-title" hidden>
   <b id="space-title" class="pop-title">Your calculator's space for apps</b>
