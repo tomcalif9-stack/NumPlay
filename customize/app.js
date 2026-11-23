@@ -307,7 +307,6 @@
     $('#app-chip-icon').classList.toggle('custom', st.app.icon === 'custom');
     $('#app-chip').dataset.tip = (s ? byId[s].title : st.app.name.trim() || 'No name') + '|its icon and name on your calculator, and how it opens';
     $('#lang-chip').dataset.tip = LANGS[st.lang][1] + '|the language of its menus';
-    $('#theme-chip').dataset.tip = 'Home theme|the style of your calculator\'s home screen';
     $('#lang-chip-label').textContent = LANGS[st.lang][0];
     renderCarts();
     save();
