@@ -248,6 +248,7 @@ body.dragging .drop-hint { display: flex; }
   display: flex; flex-direction: column; gap: 14px;
 }
 .pop.narrow { width: 170px; padding: 8px; }
+.theme-pop { width: 330px; }
 .pop-row { display: flex; align-items: center; gap: 10px; }
 .pop-label { width: 66px; flex-shrink: 0; font-size: 12px; font-weight: 650; color: var(--mute); }
 .icon-pick { display: flex; gap: 8px; }
@@ -291,7 +292,7 @@ body.dragging .drop-hint { display: flex; }
 .other .cap-of { white-space: pre-line; text-align: center; line-height: 1.3; }
 .install:disabled { background: var(--track); color: var(--mute); cursor: default; }
 .install.busy { cursor: progress; opacity: 0.6; }
-.other .calc, .other #app-chip, .other #lang-chip, .other #space-chip, .other .retro, .other #dock-download { display: none !important; }
+.other .calc, .other #app-chip, .other #lang-chip, .other #theme-chip, .other #space-chip, .other .retro, .other #dock-download { display: none !important; }
 .other .title button { cursor: default; }
 .app.away { display: none; }
 .step-icon.n { font-size: 17px; font-weight: 750; }
