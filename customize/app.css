@@ -248,7 +248,7 @@ body.dragging .drop-hint { display: flex; }
   display: flex; flex-direction: column; gap: 14px;
 }
 .pop.narrow { width: 170px; padding: 8px; }
-.theme-pop { width: 330px; }
+.theme-pop { width: 330px; z-index: 35; }
 .pop-row { display: flex; align-items: center; gap: 10px; }
 .pop-label { width: 66px; flex-shrink: 0; font-size: 12px; font-weight: 650; color: var(--mute); }
 .icon-pick { display: flex; gap: 8px; }
