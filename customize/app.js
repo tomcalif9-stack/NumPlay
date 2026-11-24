@@ -100,7 +100,7 @@
     if (!required.every((id) => models[id] && Number(models[id].available_bytes) > 0)) return null;
     const values = Object.values(models).map((x) => Number(x.available_bytes)).filter((x) => Number.isFinite(x) && x > 0);
     if (!values.length) return null;
-    return osState.model === 'all' ? Math.min(...values) : (models[osState.model] ? Number(models[osState.model].available_bytes) : null);
+    return Math.min(...values);
   };
   const spaces = () => {
     const fromKit = kit.spaces && kit.spaces.length ? kit.spaces.filter((s) => s.id === 'std' || s.id === 'e26') : [];
