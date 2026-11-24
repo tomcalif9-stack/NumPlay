@@ -83,7 +83,7 @@
   let ports = null;        // kit/ports/ports.json: each other calculator's games, their files and sizes
   const kits = {};         // the kit of each language, loaded when picked
   const byId = {};
-  const osState = { style: store('numplay-os-style') || 'switch', model: store('numplay-os-model') || 'all', files: [] };
+  const osState = { style: store('numplay-os-style') || 'switch', model: store('numplay-os-model') || 'all' };
   let osMemoryMap = null;
   const st = {
     picked: new Set(), order: [], roms: [], apps: [], carts: [], cap: 'std', lang: 'en',
@@ -1453,9 +1453,6 @@
     for (const b of document.querySelectorAll('[data-os]'))
       b.setAttribute('aria-checked', b.dataset.os === osState.style ? 'true' : 'false');
     $('#os-model').value = osState.model;
-    $('#os-files-status').textContent = osState.files.length
-      ? osState.files.map(f => f.name + ' · ' + mb(f.size)).join(' | ') + '. Ces fichiers ne sont pas inclus dans le firmware; leur empreinte installée est évaluée dans le sélecteur mémoire NumPlay.'
-      : 'Les fichiers .nwa peuvent être ajoutés dans le sélecteur mémoire pour vérifier la place qu’ils prennent dans NumPlay.';
     $('#os-build').disabled = !firmwareSignedIn || !$('#os-model-confirm').checked;
   }
 
@@ -2464,10 +2461,6 @@
         render();
       }
       renderSpaces();
-    });
-    $('#os-app-files').addEventListener('change', (e) => {
-      osState.files = [...e.target.files];
-      renderOsPanel();
     });
     $('#os-login').addEventListener('click', () => { location.href = FIRMWARE_BRIDGE + '/api/login'; });
     $('#os-logout').addEventListener('click', async () => {
