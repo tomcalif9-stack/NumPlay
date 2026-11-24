@@ -1190,7 +1190,7 @@
     if (!note) return;
     const models = Object.entries(modelMemory()).filter(([, v]) => Number(v.available_bytes) > 0);
     if (models.length < 3 || !['n0120','n0115','n0110'].every((id) => modelMemory()[id])) {
-      note.textContent = 'Rapport mémoire incomplet. Lance une compilation « All models » depuis le panneau OS pour vérifier N0120, N0115 et N0110. Le mode custom reste désactivé tant que les trois capacités ne sont pas disponibles.';
+      note.textContent = 'Rapport mémoire incomplet. Lance une compilation « Tous les modèles » depuis le panneau OS pour vérifier N0120, N0115 et N0110. Le mode custom reste désactivé tant que les trois capacités ne sont pas disponibles.';
       return;
     }
     const used = total(ordered(), st.roms, st.apps, st.carts);
