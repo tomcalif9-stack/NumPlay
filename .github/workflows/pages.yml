@@ -5,6 +5,7 @@ name: Pages
 # GitHub's numbers (tools/badges.py), and NumPlay Studio (customize/) with the kit Build leaves on
 # the branch "kit". On each push to main, every six hours so the numbers stay fresh, and after each
 # release or new kit (Build starts it).
+# A push to feature/console-themes also refreshes the preview deployment.
 
 on:
   push:
