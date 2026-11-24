@@ -1387,12 +1387,13 @@
       $('#os-logout').hidden = true;
     }
   }
-  async function refreshFirmwareMemoryMap() {
+  async function refreshFirmwareMemoryMap(runId) {
     try {
-      osMemoryMap = await firmwareRequest('/api/memory-map');
+      osMemoryMap = runId ? await firmwareRequest('/api/memory-map?run_id=' + encodeURIComponent(runId)) : null;
     } catch (e) {
       osMemoryMap = null;
     }
+    if (!customSpaceSize() && st.cap === 'custom') st.cap = 'std';
     renderMemoryNote();
     if ($('#space-pop') && !$('#space-pop').hidden) renderSpaces();
   }
@@ -1401,7 +1402,11 @@
       const data = await firmwareRequest('/api/runs');
       const p = $('#os-run-status');
       p.textContent = '';
-      if (!data.runs || !data.runs.length) { p.textContent = 'No recent builds found.'; return; }
+      if (!data.runs || !data.runs.length) {
+        p.textContent = 'No recent builds found.';
+        await refreshFirmwareMemoryMap(null);
+        return;
+      }
       const run = data.runs[0];
       p.append('Latest build: ' + run.status + (run.conclusion ? ' · ' + run.conclusion : '') + ' · ');
       if (run.html_url) {
@@ -1439,7 +1444,8 @@
     } catch (e) {
       $('#os-run-status').textContent = 'Could not retrieve build status: ' + e.message;
     }
-    await refreshFirmwareMemoryMap();
+    const latest = data && data.runs && data.runs[0];
+    await refreshFirmwareMemoryMap(latest && latest.status === 'completed' && latest.conclusion === 'success' ? latest.id : null);
   }
   async function requestFirmwareBuild() {
     if (!firmwareSignedIn || !$('#os-model-confirm').checked) return;
