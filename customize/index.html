@@ -211,7 +211,7 @@
   <p class="os-catalogue-note">Each OS is a separate alternative patch set. Select only one OS for a firmware build; the four styles are not combined.</p>
   <div class="os-config">
     <label>Calculator model
-      <select id="os-model" class="field"><option value="n0110">NumWorks N0110</option><option value="n0115">NumWorks N0115</option><option value="n0120" selected>NumWorks N0120</option></select>
+      <select id="os-model" class="field"><option value="all" selected>All models (N0120, N0115, N0110)</option><option value="n0120">NumWorks N0120</option><option value="n0115">NumWorks N0115</option><option value="n0110">NumWorks N0110</option></select>
     </label>
     <label>Patch baseline
       <select id="os-base" class="field"><option value="26.1.0" selected>Epsilon 26.1.0 (version in the pinned OS patch sources)</option></select>
@@ -228,7 +228,7 @@
     <small>Games and added .nwa apps stay in a separate section.</small>
   </div>
   <label class="os-upload os-upload-planned">
-    <span><b>Extra .nwa apps / games</b><small>Coming next: add these to the post-OS setup. The current firmware build does not include uploaded .nwa files yet.</small></span>
+    <span><b>Extra .nwa apps / games</b><small>Choose .nwa files here to check their current NumPlay footprint against the compiled memory capacities. This does not add them to the firmware build.</small></span>
     <input id="os-app-files" type="file" accept=".nwa" multiple disabled>
   </label>
   <div id="os-files-status" class="os-files-status" role="note">The current firmware build does not include uploaded .nwa files.</div>
@@ -240,7 +240,7 @@
       <a href="https://nwagyu-github-io.pages.dev/apps/" target="_blank" rel="noopener">NWAGYU app gallery</a>
       <a href="https://nwagyu-github-io.pages.dev/pages/how-to/" target="_blank" rel="noopener">NWAGYU installation guide</a>
     </div>
-    <p class="os-extension-warning"><b>Important:</b> check that each app supports your calculator model and OS. The NumWorks app installer can replace the external-app list, so keep copies of every app you want to retain and select them together. NWAGyu's Storage app is an app for viewing storage use; Nwagra is the separate memory-expansion method.</p>
+    <p class="os-extension-warning"><b>Important:</b> check that each app supports your calculator model and OS. The NumWorks app installer can replace the external-app list, so keep copies of every app you want to retain and select them together.</p>
     <p>Direct installation from this Studio is not enabled yet. These links open the project owners' pages in a new tab.</p>
   </section>
   <div class="os-build-status" aria-live="polite">
@@ -260,8 +260,7 @@
   <b id="space-title" class="pop-title">Your calculator's space for apps</b>
   <div id="spaces" class="segctl col spaces" role="radiogroup" aria-labelledby="space-title"></div>
   <label class="memory-add-apps" for="app-file">Ajouter des applications .nwa</label>
-  <p class="memory-note">Les tailles affichées sont des estimations de l'espace installé. Pour Epsilon 26 sur N0120, la capacité de référence est d'environ 2,44 Mio. La capacité avec l'OS personnalisé reste une estimation tant que son plan mémoire n'a pas été vérifié.</p>
-  <div id="nwagra" hidden></div>
+  <p id="memory-note" class="memory-note">La capacité de l'OS custom sera affichée après une compilation pour les trois modèles.</p>
 </div>
 <input id="icon-file" type="file" accept="image/*" hidden>
 
