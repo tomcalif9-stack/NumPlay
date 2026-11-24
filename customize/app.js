@@ -96,6 +96,8 @@
   const modelMemory = () => (osMemoryMap && osMemoryMap.models) || {};
   const customSpaceSize = () => {
     const models = modelMemory();
+    const required = ['n0120', 'n0115', 'n0110'];
+    if (!required.every((id) => models[id] && Number(models[id].available_bytes) > 0)) return null;
     const values = Object.values(models).map((x) => Number(x.available_bytes)).filter((x) => Number.isFinite(x) && x > 0);
     if (!values.length) return null;
     return osState.model === 'all' ? Math.min(...values) : (models[osState.model] ? Number(models[osState.model].available_bytes) : null);
@@ -1177,8 +1179,8 @@
     const note = $('#memory-note');
     if (!note) return;
     const models = Object.entries(modelMemory()).filter(([, v]) => Number(v.available_bytes) > 0);
-    if (!models.length) {
-      note.textContent = 'Pour activer « Epsilon 26 + OS custom », lance une compilation « Tous les modèles » depuis le panneau OS. Les capacités seront calculées depuis les fichiers ELF.';
+    if (models.length < 3 || !['n0120','n0115','n0110'].every((id) => modelMemory()[id])) {
+      note.textContent = 'Rapport mémoire incomplet. Lance une compilation « All models » depuis le panneau OS pour vérifier N0120, N0115 et N0110. Le mode custom reste désactivé tant que les trois capacités ne sont pas disponibles.';
       return;
     }
     const used = total(ordered(), st.roms, st.apps, st.carts);
