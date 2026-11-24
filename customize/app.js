@@ -7,9 +7,7 @@
   const KIT = 'kit/';
   const MEDIA = '../docs/media/';  // the games' clips (kit.json: previews/ or gallery/)
   const MiB = 1048576;
-  // The calculator's space for apps (kit.json "spaces"): from where its software ends, 0x90200000 or, on Epsilon 26,
-  // 0x90180000, to 0x903F0000; with Enlarged Extra Apps (nwagyu's Nwagra, before Epsilon 26) on to the end of the
-  // flash, 0x90800000
+  // Base capacities come from kit.json; custom OS capacity comes from the compiled slot-B ELF memory map.
   const SPACES = { std: 'Chaque NumWorks', e26: 'Epsilon 26', custom: 'Epsilon 26 + OS custom' };
   const E26_SPACE = 0x903F0000 - 0x90180000;
   const SYS = {
@@ -94,7 +92,7 @@
   let romKey = 0, appKey = 0, cartKey = 0;
 
   // ------------------------------------------------------------------ sizes
-  // (not Nwagra on Epsilon 26, xl26, which kits before 1.24.19 list: there the installer shows the space as NaN)
+  // The custom OS mode is available only after a verified model memory report is loaded.
   const modelMemory = () => (osMemoryMap && osMemoryMap.models) || {};
   const customSpaceSize = () => {
     const models = modelMemory();
@@ -144,7 +142,7 @@
   // a big game too big to go beside the launcher in this space (kit.json "alone") goes on its own there,
   // as its own app: as if you installed just that game
   const alone = (id) => !!game(id).alone && own([id], []) + flash(id) > nwCap();
-  // (one too big for this space even on its own, as FNAF World is but for Nwagra's 6 MB)
+  // A game that cannot fit even by itself in the selected application area.
   const bigger = (id) => alone(id) && game(id).alone.size > nwCap();
   const solo = () => ordered().find(alone) || null;
   let before = null;  // your games while one of those is picked, back when it's taken out
@@ -416,7 +414,7 @@
     b.addEventListener('animationend', () => b.classList.remove(cls), { once: true });
   }
   function overflow(bytes) {
-    toast("That doesn't fit: " + size(bytes) + ' too much' + (!other() && st.cap === 'std' ? '. Epsilon 26 and Nwagra give more space' : '. Take games out first'));
+    toast("That doesn't fit: " + size(bytes) + ' too much' + (!other() && st.cap === 'std' ? '. Epsilon 26 or the custom OS slot may have more room' : '. Take games out first'));
     $('#screen').classList.add('over');
     setTimeout(() => render(), 500);
   }
@@ -429,9 +427,12 @@
       if (alone(id) && before) { st.picked = new Set(before); before = null; }
     } else if (bigger(id)) {
       if (!quiet) {
-        bump(b, 'shake'); toast(byId[id].title + ' is ' + mb(game(id).alone.size) + (st.cap === 'e26' ? ": it needs Nwagra, which doesn't work on Epsilon 26"
-          : ': it needs Nwagra. Pick it in the space for apps'));
-        if (st.cap !== 'e26' && popOpen !== $('#space-pop')) { renderSpaces(); openPop($('#space-pop'), $('#space-chip'), true); }
+        bump(b, 'shake');
+        const customFits = spaces().some((space) => space.id === 'custom' && space.size >= game(id).alone.size);
+        toast(byId[id].title + ' needs ' + mb(game(id).alone.size) + (customFits && st.cap !== 'custom'
+          ? '. Try Epsilon 26 + OS custom in the memory selector'
+          : ', which is more than the selected memory space'));
+        if (customFits && popOpen !== $('#space-pop')) { renderSpaces(); openPop($('#space-pop'), $('#space-chip'), true); }
       }
       return;
     } else if (alone(id)) {
@@ -537,10 +538,11 @@
   function tooBig(r) {
     const alone = total([], [r]);
     if (alone <= capacity()) return false;
-    const fit = (id) => spaces().some((s) => s.id === id && s.size >= alone);
-    const needs = st.cap === 'std' && fit('e26') ? 'Epsilon 26 or Nwagra' : st.cap === 'std' && fit('xl') ? 'Nwagra' : '';
+    const customFits = spaces().some((s) => s.id === 'custom' && s.size >= alone);
+    const needs = st.cap === 'std' && spaces().some((s) => s.id === 'e26' && s.size >= alone) ? 'Epsilon 26' :
+      st.cap !== 'custom' && customFits ? 'Epsilon 26 + OS custom' : '';
     toast(r.name + ' is ' + mb(r.bytes.length) + ', more than ' + mb(capacity()) +
-      (needs ? '. On ' + needs + '? Pick it in the space for apps' : ': too big for the calculator'));
+      (needs ? '. Try ' + needs + ' in the memory selector' : ': too big for the calculator'));
     if (needs && popOpen !== $('#space-pop')) { renderSpaces(); openPop($('#space-pop'), $('#space-chip'), true); }
     $('#screen').classList.add('over');
     setTimeout(() => render(), 500);
@@ -1170,7 +1172,7 @@
   }
 
   // ------------------------------------------------------------------ the calculator's space for apps
-  // Pick yours: its name and size, the installer's figure on each; with Nwagra, how to get it
+  // Pick a memory layout; custom OS capacity comes from the compiled firmware application section.
   function renderMemoryNote() {
     const note = $('#memory-note');
     if (!note) return;
