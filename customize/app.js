@@ -2308,6 +2308,7 @@
     $('#os-model').addEventListener('change', (e) => {
       osState.model = e.target.value;
       store('numplay-os-model', osState.model);
+      $('#os-model-confirm').checked = false;
     });
     $('#os-app-files').addEventListener('change', (e) => {
       osState.files = [...e.target.files];
