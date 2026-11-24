@@ -1408,9 +1408,7 @@
     for (const b of document.querySelectorAll('[data-os]'))
       b.setAttribute('aria-checked', b.dataset.os === osState.style ? 'true' : 'false');
     $('#os-model').value = osState.model;
-    $('#os-files-status').textContent = osState.files.length
-      ? osState.files.length + ' .nwa file(s) selected: ' + osState.files.map(f => f.name).join(', ')
-      : 'No extra .nwa files selected.';
+    $('#os-files-status').textContent = 'Uploading .nwa files into the firmware build is not implemented yet. Use the app links below after checking OS compatibility.';
     $('#os-build').disabled = !firmwareSignedIn || !$('#os-model-confirm').checked;
   }
 
