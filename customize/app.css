@@ -572,3 +572,8 @@ html.intro-wait main { opacity: 0; }
 .os-build-status small { display:block; margin-top:8px; color:var(--mute); }
 #os-run-status { overflow-wrap:anywhere; }
 #os-run-status a { color:var(--blue); font-weight:650; }
+
+.os-artifact-list { display:flex; flex-direction:column; gap:6px; margin-top:10px; padding-top:9px; border-top:1px solid var(--line); }
+.os-artifact-list > b { color:var(--text); }
+.os-artifact-download { display:block; width:fit-content; max-width:100%; padding:7px 10px; border-radius:8px; background:var(--blue); color:white !important; text-decoration:none; font-weight:700; overflow-wrap:anywhere; }
+.os-artifact-list small { color:var(--mute); font-size:11px; }
