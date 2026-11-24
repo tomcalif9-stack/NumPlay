@@ -10,8 +10,8 @@
   // The calculator's space for apps (kit.json "spaces"): from where its software ends, 0x90200000 or, on Epsilon 26,
   // 0x90180000, to 0x903F0000; with Enlarged Extra Apps (nwagyu's Nwagra, before Epsilon 26) on to the end of the
   // flash, 0x90800000
-  const SPACES = { std: 'Epsilon standard', e26: 'Epsilon 26 / OS personnalisé (estimation)' };
-  const XL_SPACE = 6 * MiB;  // (kits from before kit.json had spaces)
+  const SPACES = { std: 'Chaque NumWorks', e26: 'Epsilon 26', custom: 'Epsilon 26 + OS custom' };
+  const E26_SPACE = 0x903F0000 - 0x90180000;
   const SYS = {
     1: { tag: 'GB', name: 'Game Boy', color: '#6d8a0c', shell: '#c9c9cf' },
     2: { tag: 'GBC', name: 'Game Boy Color', color: '#6a3fb5', shell: '#b9a6d8' },
@@ -83,7 +83,8 @@
   let ports = null;        // kit/ports/ports.json: each other calculator's games, their files and sizes
   const kits = {};         // the kit of each language, loaded when picked
   const byId = {};
-  const osState = { style: store('numplay-os-style') || 'switch', model: store('numplay-os-model') || 'n0120', files: [] };
+  const osState = { style: store('numplay-os-style') || 'switch', model: store('numplay-os-model') || 'all', files: [] };
+  let osMemoryMap = null;
   const st = {
     picked: new Set(), order: [], roms: [], apps: [], carts: [], cap: 'std', lang: 'en',
     app: { icon: 'NumPlay', name: 'NumPlay', open: 'numplay', secret: 0, hint: true, theme: 0 },
@@ -94,12 +95,25 @@
 
   // ------------------------------------------------------------------ sizes
   // (not Nwagra on Epsilon 26, xl26, which kits before 1.24.19 list: there the installer shows the space as NaN)
-  const spaces = () => kit.spaces && kit.spaces.length ? kit.spaces.filter((s) => s.id in SPACES) :
-    [{ id: 'std', size: kit.appSpace }, { id: 'xl', size: kit.xlAppSpace || XL_SPACE }];
+  const modelMemory = () => (osMemoryMap && osMemoryMap.models) || {};
+  const customSpaceSize = () => {
+    const models = modelMemory();
+    const values = Object.values(models).map((x) => Number(x.available_bytes)).filter((x) => Number.isFinite(x) && x > 0);
+    if (!values.length) return null;
+    return osState.model === 'all' ? Math.min(...values) : (models[osState.model] ? Number(models[osState.model].available_bytes) : null);
+  };
+  const spaces = () => {
+    const fromKit = kit.spaces && kit.spaces.length ? kit.spaces.filter((s) => s.id === 'std' || s.id === 'e26') : [];
+    const base = fromKit.length ? fromKit : [
+      { id: 'std', size: kit.appSpace },
+      { id: 'e26', size: E26_SPACE }
+    ];
+    const custom = customSpaceSize();
+    return custom ? base.concat([{ id: 'custom', size: custom }]) : base;
+  };
   const space = () => spaces().find((s) => s.id === st.cap) || spaces()[0];
   const nwCap = () => space().size;
   const capacity = () => (other() ? CALCS[st.calc].space * MiB : nwCap());  // (the calculator's, as you picked it)
-  const nwagra = () => st.cap.startsWith('xl');
   const mb = (b) => +(b / MiB).toFixed(2) + ' MB';
   const langKit = () => kits[st.lang] || kit;
   const game = (id) => (langKit().byId || {})[id] || byId[id];  // (as the app's language has it)
@@ -207,6 +221,7 @@
     const list = items(), cap = capacity();
     const used = list.reduce((s, it) => s + it.bytes, 0);
     const over = used > cap;
+    renderMemoryNote();
 
     // the screen
     const free = cap - used;
@@ -1156,6 +1171,26 @@
 
   // ------------------------------------------------------------------ the calculator's space for apps
   // Pick yours: its name and size, the installer's figure on each; with Nwagra, how to get it
+  function renderMemoryNote() {
+    const note = $('#memory-note');
+    if (!note) return;
+    const models = Object.entries(modelMemory()).filter(([, v]) => Number(v.available_bytes) > 0);
+    if (!models.length) {
+      note.textContent = 'Pour activer « Epsilon 26 + OS custom », lance une compilation « Tous les modèles » depuis le panneau OS. Les capacités seront calculées depuis les fichiers ELF.';
+      return;
+    }
+    const used = total(ordered(), st.roms, st.apps, st.carts);
+    const labels = { n0120: 'N0120', n0115: 'N0115', n0110: 'N0110' };
+    const lines = models.sort((a, b) => ['n0120','n0115','n0110'].indexOf(a[0]) - ['n0120','n0115','n0110'].indexOf(b[0]))
+      .map(([id, v]) => {
+        const free = Number(v.available_bytes) - used;
+        return labels[id] + ' : ' + (free >= 0 ? mb(free) + ' libres' : 'dépassement de ' + mb(-free));
+      });
+    note.textContent = 'Mémoire des applications calculée dans le slot B après compilation du firmware. Utilisation actuelle (NumPlay + jeux + .nwa ajoutés) : ' +
+      mb(used) + '. ' + lines.join(' · ') +
+      '. Le sélecteur « Epsilon 26 + OS custom » utilise la plus petite capacité disponible afin de rester compatible avec tous les modèles présents dans le rapport.';
+  }
+
   function renderSpaces() {
     const box = $('#spaces');
     box.textContent = '';
@@ -1166,11 +1201,11 @@
       b.appendChild(el('b')).textContent = mb(sp.size);
       b.addEventListener('click', () => {
         if (!setSpace(sp.id)) return;
-        if (nwagra()) { renderSpaces(); placePop(); } else closePops();
+        closePops();
       });
       box.appendChild(b);
     }
-    $('#nwagra').hidden = !nwagra();
+    renderMemoryNote();
   }
   function setSpace(id) {
     if (id === st.cap) return true;
@@ -2121,7 +2156,6 @@
   function openSheet(file) {
     const s = $('#sheet');
     for (const f of s.querySelectorAll('.sheet-file')) f.textContent = file;
-    for (const li of s.querySelectorAll('.xl-only')) li.hidden = !nwagra();
     s.hidden = false;
     s.querySelector('.sheet-card a.install').focus();
   }
