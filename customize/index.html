@@ -213,10 +213,11 @@
     <label>Calculator model
       <select id="os-model" class="field"><option value="all" selected>Tous les modèles (N0120, N0115, N0110)</option><option value="n0120">NumWorks N0120</option><option value="n0115">NumWorks N0115</option><option value="n0110">NumWorks N0110</option></select>
     </label>
-    <label>Patch baseline
-      <select id="os-base" class="field"><option value="26.1.0" selected>Epsilon 26.1.0 (version in the pinned OS patch sources)</option></select>
+    <label>Version officielle requise sur la calculatrice
+      <select id="os-base" class="field"><option value="26.4.0" selected>Epsilon 26.4.0 (slot A)</option></select>
     </label>
   </div>
+  <p class="os-catalogue-note">La calculatrice doit avoir Epsilon 26.4.0 dans le slot A. Attention : Switch-OS est compilé depuis la base source Epsilon 26.1 avec son numéro de version réglé sur 26.4.0 ; cela ne signifie pas que toutes les modifications internes de la branche 26.4 ont été reprises.</p>
   <div class="os-model-warning" role="note">
     <b>Important model check</b>
     <span>Choose the model shown on the calculator itself (Settings → About). A mismatched firmware can make the calculator temporarily unusable.</span>
