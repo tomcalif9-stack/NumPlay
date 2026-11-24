@@ -1398,6 +1398,7 @@
     if ($('#space-pop') && !$('#space-pop').hidden) renderSpaces();
   }
   async function refreshFirmwareRuns() {
+    let latest = null;
     try {
       const data = await firmwareRequest('/api/runs');
       const p = $('#os-run-status');
@@ -1407,7 +1408,8 @@
         await refreshFirmwareMemoryMap(null);
         return;
       }
-      const run = data.runs[0];
+      latest = data.runs[0];
+      const run = latest;
       p.append('Latest build: ' + run.status + (run.conclusion ? ' · ' + run.conclusion : '') + ' · ');
       if (run.html_url) {
         const a = el('a', '', { href: run.html_url, target: '_blank', rel: 'noopener' });
@@ -1444,7 +1446,6 @@
     } catch (e) {
       $('#os-run-status').textContent = 'Could not retrieve build status: ' + e.message;
     }
-    const latest = data && data.runs && data.runs[0];
     await refreshFirmwareMemoryMap(latest && latest.status === 'completed' && latest.conclusion === 'success' ? latest.id : null);
   }
   async function requestFirmwareBuild() {
