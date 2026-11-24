@@ -227,11 +227,22 @@
     <div>Calculs · Grapheur · Équations · Statistiques · Matrices · Python · Paramètres</div>
     <small>Games and added .nwa apps stay in a separate section.</small>
   </div>
-  <label class="os-upload">
-    <span><b>Add .nwa apps / games</b><small>These are packaged alongside the firmware, not converted into the OS.</small></span>
-    <input id="os-app-files" type="file" accept=".nwa" multiple>
-  </label>
-  <div id="os-files-status" class="os-files-status" aria-live="polite">No extra .nwa files selected.</div>
+  <div class="os-upload os-upload-planned">
+    <span><b>Extra .nwa apps / games</b><small>Coming next: add these to the post-OS setup. The current firmware build does not include uploaded .nwa files yet.</small></span>
+  </div>
+  <div class="os-files-status" role="note">Your OS build and your .nwa applications are separate. Do not assume an app was added to the firmware ZIP.</div>
+  <section class="os-next-steps" aria-label="After the operating system">
+    <b>After the OS: apps and extensions</b>
+    <p>When your calculator is running a compatible system, you can get external apps from these sources:</p>
+    <div class="os-extension-links">
+      <a href="https://my.numworks.com/apps" target="_blank" rel="noopener">NumWorks app installer</a>
+      <a href="https://nwagyu-github-io.pages.dev/apps/" target="_blank" rel="noopener">NWAGyu app gallery</a>
+      <a href="https://nwagyu-github-io.pages.dev/pages/how-to/" target="_blank" rel="noopener">NWAGyu installation guide</a>
+      <a href="https://nwagyu.org/guide/help/enlarge-your-memory.html" target="_blank" rel="noopener">Nwagra memory-expansion guide</a>
+    </div>
+    <p class="os-extension-warning"><b>Important:</b> check that each app supports your calculator model and OS. The NumWorks app installer can replace the external-app list, so keep copies of every app you want to retain and select them together. NWAGyu's Storage app is an app for viewing storage use; Nwagra is the separate memory-expansion method.</p>
+    <p>Direct installation from this Studio is not enabled yet. These links open the project owners' pages in a new tab.</p>
+  </section>
   <div class="os-build-status" aria-live="polite">
     <b>Private firmware builder</b>
     <p id="os-auth-status">Checking GitHub authorization…</p>
