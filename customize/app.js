@@ -1200,9 +1200,11 @@
         const free = Number(v.available_bytes) - used;
         return labels[id] + ' : ' + (free >= 0 ? mb(free) + ' libres' : 'dépassement de ' + mb(-free));
       });
-    note.textContent = 'Mémoire des applications calculée dans le slot B après compilation du firmware. Utilisation actuelle (NumPlay + jeux + .nwa ajoutés) : ' +
+    const osNames = { switch: 'Switch OS', psp: 'PSP OS', wiiu: 'Wii U OS', '3ds': '3DS OS' };
+    note.textContent = 'Capacité des applications du slot B pour ' + (osNames[osMemoryMap.os] || osMemoryMap.os) +
+      ', mesurée après compilation. Utilisation actuelle (NumPlay + jeux + .nwa ajoutés) : ' +
       mb(used) + '. ' + lines.join(' · ') +
-      '. Le sélecteur « Epsilon 26 + OS custom » utilise la plus petite capacité disponible afin de rester compatible avec tous les modèles présents dans le rapport.';
+      '. Le sélecteur « Epsilon 26 + OS custom » utilise la plus petite capacité afin de garantir la compatibilité mémoire avec les trois modèles.';
   }
 
   function renderSpaces() {
