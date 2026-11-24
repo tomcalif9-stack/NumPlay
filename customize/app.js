@@ -81,7 +81,7 @@
   let ports = null;        // kit/ports/ports.json: each other calculator's games, their files and sizes
   const kits = {};         // the kit of each language, loaded when picked
   const byId = {};
-  const osState = { style: store('numplay-os-style') || 'switch', model: store('numplay-os-model') || 'all' };
+  const osState = { style: store('numplay-os-style') || 'switch', model: 'all' };
   let osMemoryMap = null;
   const st = {
     picked: new Set(), order: [], roms: [], apps: [], carts: [], cap: 'std', lang: 'en',
@@ -643,7 +643,17 @@
       if (entries() >= MAX_GAMES) { bump(drop, 'shake'); toast('NumPlay holds ' + MAX_GAMES + ' games and apps at most'); break; }
       let a;
       try { a = await appFrom(f, ++appKey); } catch (e) { console.error(e); bump(drop, 'shake'); toast(f.name + ' ' + e.message); continue; }
-      const over = total(ordered(), st.roms, st.apps.concat([a])) - capacity();
+      const nextTotal = total(ordered(), st.roms, st.apps.concat([a]));
+      if (st.cap === 'custom') {
+        const exceeded = Object.entries(modelMemory()).filter(([, v]) => nextTotal > Number(v.available_bytes));
+        if (exceeded.length) {
+          const names = { n0120: 'N0120', n0115: 'N0115', n0110: 'N0110' };
+          bump(drop, 'shake');
+          toast(f.name + ' ne tient pas dans le slot custom de ' + exceeded.map(([id]) => names[id] || id).join(', ') + '.');
+          continue;
+        }
+      }
+      const over = nextTotal - capacity();
       if (over > 0) { bump(drop, 'shake'); overflow(over); continue; }
       st.apps.push(a);
     }
