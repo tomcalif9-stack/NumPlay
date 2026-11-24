@@ -1348,8 +1348,35 @@
       p.append('Latest build: ' + run.status + (run.conclusion ? ' · ' + run.conclusion : '') + ' · ');
       if (run.html_url) {
         const a = el('a', '', { href: run.html_url, target: '_blank', rel: 'noopener' });
-        a.textContent = 'View on GitHub';
+        a.textContent = 'Build details';
         p.appendChild(a);
+      }
+      if (run.status === 'completed' && run.conclusion === 'success') {
+        const artifacts = (run.artifacts || []).filter(a => !a.expired);
+        if (artifacts.length) {
+          const list = el('div', 'os-artifact-list');
+          const heading = el('b');
+          heading.textContent = 'Ready to download';
+          list.appendChild(heading);
+          for (const artifact of artifacts) {
+            const a = el('a', 'os-artifact-download', {
+              href: FIRMWARE_BRIDGE + '/api/artifacts/' + encodeURIComponent(artifact.id),
+              target: '_blank', rel: 'noopener'
+            });
+            a.textContent = 'Download ' + artifact.name + ' (.zip)';
+            list.appendChild(a);
+            if (artifact.expires_at) {
+              const note = el('small');
+              note.textContent = 'Available until ' + new Date(artifact.expires_at).toLocaleString();
+              list.appendChild(note);
+            }
+          }
+          p.appendChild(list);
+        } else {
+          const note = el('span');
+          note.textContent = ' Build succeeded, but no downloadable files were found yet. Refresh in a moment.';
+          p.appendChild(note);
+        }
       }
     } catch (e) {
       $('#os-run-status').textContent = 'Could not retrieve build status: ' + e.message;
