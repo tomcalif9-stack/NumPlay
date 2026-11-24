@@ -93,7 +93,7 @@
 
   // ------------------------------------------------------------------ sizes
   // The custom OS mode is available only after a verified model memory report is loaded.
-  const modelMemory = () => (osMemoryMap && osMemoryMap.models) || {};
+  const modelMemory = () => (osMemoryMap && osMemoryMap.os === osState.style && osMemoryMap.models) || {};
   const customSpaceSize = () => {
     const models = modelMemory();
     const required = ['n0120', 'n0115', 'n0110'];
@@ -2466,7 +2466,9 @@
     for (const b of document.querySelectorAll('[data-os]')) b.addEventListener('click', () => {
       osState.style = b.dataset.os;
       store('numplay-os-style', osState.style);
+      if (st.cap === 'custom' && !customSpaceSize()) { st.cap = 'std'; render(); }
       renderOsPanel();
+      renderSpaces();
     });
     $('#os-model').addEventListener('change', (e) => {
       osState.model = e.target.value;
