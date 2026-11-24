@@ -227,10 +227,11 @@
     <div>Calculs · Grapheur · Équations · Statistiques · Matrices · Python · Paramètres</div>
     <small>Games and added .nwa apps stay in a separate section.</small>
   </div>
-  <div class="os-upload os-upload-planned">
+  <label class="os-upload os-upload-planned">
     <span><b>Extra .nwa apps / games</b><small>Coming next: add these to the post-OS setup. The current firmware build does not include uploaded .nwa files yet.</small></span>
-  </div>
-  <div class="os-files-status" role="note">Your OS build and your .nwa applications are separate. Do not assume an app was added to the firmware ZIP.</div>
+    <input id="os-app-files" type="file" accept=".nwa" multiple disabled>
+  </label>
+  <div id="os-files-status" class="os-files-status" role="note">The current firmware build does not include uploaded .nwa files.</div>
   <section class="os-next-steps" aria-label="After the operating system">
     <b>After the OS: apps and extensions</b>
     <p>When your calculator is running a compatible system, you can get external apps from these sources:</p>
