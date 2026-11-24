@@ -587,3 +587,13 @@ html.intro-wait main { opacity: 0; }
 .os-extension-links { display:flex; flex-wrap:wrap; gap:7px; }
 .os-extension-links a { display:inline-block; padding:7px 9px; border:1px solid var(--line); border-radius:8px; color:var(--blue); background:var(--paper); font-weight:650; text-decoration:none; }
 .os-extension-warning { color:var(--text) !important; }
+
+
+/* ---- app picker in the memory panel */
+.memory-add-apps {
+  display: block; width: fit-content; max-width: 100%; margin-top: 10px;
+  padding: 9px 12px; border-radius: 9px; background: var(--blue); color: #fff;
+  font-size: 12px; font-weight: 700; cursor: pointer;
+}
+.memory-add-apps:hover { filter: brightness(1.06); }
+.memory-note { margin: 7px 0 0; color: var(--mute); font-size: 11px; line-height: 1.45; }
