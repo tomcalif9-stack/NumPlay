@@ -1304,6 +1304,79 @@
     }
     render();
   }
+  const FIRMWARE_BRIDGE = 'https://numplay-firmware-bridge.numplay-firmware-bridge.workers.dev';
+  let firmwareSignedIn = false;
+  function firmwareStatus(message) {
+    $('#os-auth-status').textContent = message;
+    $('#os-build').disabled = !firmwareSignedIn || !$('#os-model-confirm').checked;
+  }
+  async function firmwareRequest(path, options = {}) {
+    const r = await fetch(FIRMWARE_BRIDGE + path, {
+      ...options, credentials: 'include',
+      headers: { ...(options.headers || {}), ...(options.body ? { 'Content-Type': 'application/json' } : {}) }
+    });
+    let data = {};
+    try { data = await r.json(); } catch (e) { /* handled below */ }
+    if (!r.ok) throw new Error(data.error || 'Request failed (' + r.status + ')');
+    return data;
+  }
+  async function refreshFirmwareStatus() {
+    firmwareStatus('Checking GitHub authorization…');
+    try {
+      const me = await firmwareRequest('/api/me');
+      firmwareSignedIn = true;
+      firmwareStatus('Signed in as ' + me.login + '.');
+      $('#os-login').hidden = true;
+      $('#os-logout').hidden = false;
+      await refreshFirmwareRuns();
+    } catch (e) {
+      firmwareSignedIn = false;
+      firmwareStatus(e.message.includes('401') || e.message.includes('Sign in')
+        ? 'Not signed in. Sign in with the authorized GitHub account to request a private build.'
+        : 'Bridge unavailable: ' + e.message);
+      $('#os-login').hidden = false;
+      $('#os-logout').hidden = true;
+    }
+  }
+  async function refreshFirmwareRuns() {
+    try {
+      const data = await firmwareRequest('/api/runs');
+      const p = $('#os-run-status');
+      p.textContent = '';
+      if (!data.runs || !data.runs.length) { p.textContent = 'No recent builds found.'; return; }
+      const run = data.runs[0];
+      p.append('Latest build: ' + run.status + (run.conclusion ? ' · ' + run.conclusion : '') + ' · ');
+      if (run.html_url) {
+        const a = el('a', '', { href: run.html_url, target: '_blank', rel: 'noopener' });
+        a.textContent = 'View on GitHub';
+        p.appendChild(a);
+      }
+    } catch (e) {
+      $('#os-run-status').textContent = 'Could not retrieve build status: ' + e.message;
+    }
+  }
+  async function requestFirmwareBuild() {
+    if (!firmwareSignedIn || !$('#os-model-confirm').checked) return;
+    const button = $('#os-build');
+    button.disabled = true;
+    button.textContent = 'Requesting build…';
+    $('#os-run-status').textContent = 'Sending build request to the private runner…';
+    try {
+      const result = await firmwareRequest('/api/build', {
+        method: 'POST',
+        body: JSON.stringify({ os: osState.style, model: osState.model })
+      });
+      $('#os-run-status').textContent = result.accepted
+        ? 'Build request accepted for ' + osState.style.toUpperCase() + ' · ' + osState.model.toUpperCase() + '. Refresh status in a moment.'
+        : 'The build request was not accepted.';
+      await refreshFirmwareRuns();
+    } catch (e) {
+      $('#os-run-status').textContent = 'Build request failed: ' + e.message;
+    } finally {
+      button.textContent = 'Build selected OS';
+      button.disabled = !firmwareSignedIn || !$('#os-model-confirm').checked;
+    }
+  }
   function renderOsPanel() {
     for (const b of document.querySelectorAll('[data-os]'))
       b.setAttribute('aria-checked', b.dataset.os === osState.style ? 'true' : 'false');
@@ -1311,6 +1384,7 @@
     $('#os-files-status').textContent = osState.files.length
       ? osState.files.length + ' .nwa file(s) selected: ' + osState.files.map(f => f.name).join(', ')
       : 'No extra .nwa files selected.';
+    $('#os-build').disabled = !firmwareSignedIn || !$('#os-model-confirm').checked;
   }
 
 
@@ -2314,6 +2388,20 @@
       osState.files = [...e.target.files];
       renderOsPanel();
     });
+    $('#os-login').addEventListener('click', () => { location.href = FIRMWARE_BRIDGE + '/api/login'; });
+    $('#os-logout').addEventListener('click', async () => {
+      try { await firmwareRequest('/api/logout', { method: 'POST' }); } catch (e) { /* session may already be expired */ }
+      firmwareSignedIn = false;
+      firmwareStatus('Signed out.');
+      $('#os-login').hidden = false;
+      $('#os-logout').hidden = true;
+    });
+    $('#os-refresh').addEventListener('click', refreshFirmwareStatus);
+    $('#os-build').addEventListener('click', requestFirmwareBuild);
+    $('#os-model-confirm').addEventListener('change', () => {
+      $('#os-build').disabled = !firmwareSignedIn || !$('#os-model-confirm').checked;
+    });
+    refreshFirmwareStatus();
     renderOsPanel();
     document.addEventListener('pointerdown', (e) => {
       if (popOpen && !e.target.closest('.pop, .chip, .space-chip')) closePops();
