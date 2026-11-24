@@ -1373,6 +1373,15 @@
       $('#os-logout').hidden = true;
     }
   }
+  async function refreshFirmwareMemoryMap() {
+    try {
+      osMemoryMap = await firmwareRequest('/api/memory-map');
+    } catch (e) {
+      osMemoryMap = null;
+    }
+    renderMemoryNote();
+    if ($('#space-pop') && !$('#space-pop').hidden) renderSpaces();
+  }
   async function refreshFirmwareRuns() {
     try {
       const data = await firmwareRequest('/api/runs');
@@ -1416,6 +1425,7 @@
     } catch (e) {
       $('#os-run-status').textContent = 'Could not retrieve build status: ' + e.message;
     }
+    await refreshFirmwareMemoryMap();
   }
   async function requestFirmwareBuild() {
     if (!firmwareSignedIn || !$('#os-model-confirm').checked) return;
@@ -1443,7 +1453,9 @@
     for (const b of document.querySelectorAll('[data-os]'))
       b.setAttribute('aria-checked', b.dataset.os === osState.style ? 'true' : 'false');
     $('#os-model').value = osState.model;
-    $('#os-files-status').textContent = 'Uploading .nwa files into the firmware build is not implemented yet. Use the app links below after checking OS compatibility.';
+    $('#os-files-status').textContent = osState.files.length
+      ? osState.files.map(f => f.name + ' · ' + mb(f.size)).join(' | ') + '. Ces fichiers ne sont pas inclus dans le firmware; leur empreinte installée est évaluée dans le sélecteur mémoire NumPlay.'
+      : 'Les fichiers .nwa peuvent être ajoutés dans le sélecteur mémoire pour vérifier la place qu’ils prennent dans NumPlay.';
     $('#os-build').disabled = !firmwareSignedIn || !$('#os-model-confirm').checked;
   }
 
@@ -2442,6 +2454,16 @@
       osState.model = e.target.value;
       store('numplay-os-model', osState.model);
       $('#os-model-confirm').checked = false;
+      renderMemoryNote();
+      if (st.cap === 'custom') {
+        const next = customSpaceSize();
+        if (next && usedBytes() > next) {
+          st.cap = 'e26';
+          toast('Le contenu dépasse la capacité custom de ce modèle; retour à Epsilon 26.');
+        }
+        render();
+      }
+      renderSpaces();
     });
     $('#os-app-files').addEventListener('change', (e) => {
       osState.files = [...e.target.files];
