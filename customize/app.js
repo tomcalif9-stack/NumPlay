@@ -10,7 +10,7 @@
   // The calculator's space for apps (kit.json "spaces"): from where its software ends, 0x90200000 or, on Epsilon 26,
   // 0x90180000, to 0x903F0000; with Enlarged Extra Apps (nwagyu's Nwagra, before Epsilon 26) on to the end of the
   // flash, 0x90800000
-  const SPACES = { std: 'Every NumWorks', e26: 'Epsilon 26', xl: 'Nwagra' };
+  const SPACES = { std: 'Epsilon standard', e26: 'Epsilon 26 / OS personnalisé (estimation)' };
   const XL_SPACE = 6 * MiB;  // (kits from before kit.json had spaces)
   const SYS = {
     1: { tag: 'GB', name: 'Game Boy', color: '#6d8a0c', shell: '#c9c9cf' },
