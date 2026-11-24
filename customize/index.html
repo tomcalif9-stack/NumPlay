@@ -202,19 +202,25 @@
     <b>Build your calculator OS</b>
     <span>This changes the calculator firmware, not the NumPlay app theme.</span>
   </div>
-  <div class="os-choice" role="radiogroup" aria-label="Operating system style">
-    <button type="button" data-os="switch" aria-checked="true" role="radio"><b>Switch-OS</b><small>Game tiles and native app shortcuts</small></button>
-    <button type="button" data-os="psp" aria-checked="false" role="radio"><b>PSP-OS</b><small>Horizontal categories and vertical lists</small></button>
-    <button type="button" data-os="wiiu" aria-checked="false" role="radio"><b>Wii U-OS</b><small>Pages of colourful tiles</small></button>
-    <button type="button" data-os="3ds" aria-checked="false" role="radio"><b>3DS-OS</b><small>Carousel and dual-area layout</small></button>
+  <div class="os-choice" role="radiogroup" aria-label="Operating system catalogue">
+    <button type="button" data-os="switch" aria-checked="true" role="radio"><b>Switch-OS</b><small>Console-inspired home screen with game tiles and native app shortcuts</small><small class="os-build-mark">Build checked · N0110 / N0115 / N0120</small></button>
+    <button type="button" data-os="psp" aria-checked="false" role="radio"><b>PSP-OS</b><small>Portable-console layout with horizontal categories and vertical lists</small><small class="os-build-mark">Build checked · N0110 / N0115 / N0120</small></button>
+    <button type="button" data-os="wiiu" aria-checked="false" role="radio"><b>Wii U-OS</b><small>Colourful tiled home screen arranged across pages</small><small class="os-build-mark">Build checked · N0110 / N0115 / N0120</small></button>
+    <button type="button" data-os="3ds" aria-checked="false" role="radio"><b>3DS-OS</b><small>Carousel-style home screen with a dual-area layout</small><small class="os-build-mark">Build checked · N0110 / N0115 / N0120</small></button>
   </div>
+  <p class="os-catalogue-note">Each OS is a separate alternative patch set. Select only one OS for a firmware build; the four styles are not combined.</p>
   <div class="os-config">
     <label>Calculator model
       <select id="os-model" class="field"><option value="n0110">NumWorks N0110</option><option value="n0115">NumWorks N0115</option><option value="n0120" selected>NumWorks N0120</option></select>
     </label>
     <label>Firmware base
-      <select id="os-base" class="field"><option value="26.4.0" selected>Epsilon 26.4.0 (latest supplied OS patches)</option></select>
+      <select id="os-base" class="field"><option value="26.4.0" selected>Epsilon 26.4.0 (configured base; latest status not confirmed)</option></select>
     </label>
+  </div>
+  <div class="os-model-warning" role="note">
+    <b>Important model check</b>
+    <span>Choose the model shown on the calculator itself (Settings → About). A mismatched firmware can make the calculator temporarily unusable.</span>
+    <label><input id="os-model-confirm" type="checkbox"> I checked that the selected model matches my calculator.</label>
   </div>
   <div class="os-preserve">
     <b>Native calculator apps kept in the home menu</b>
