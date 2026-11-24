@@ -563,3 +563,12 @@ html.intro-wait main { opacity: 0; }
 .os-model-warning { display:flex; flex-direction:column; gap:6px; padding:11px 12px; border:1px solid #e4b45b; border-radius:12px; background:#fff8e8; color:#704600; font-size:12px; line-height:1.45; }
 .os-model-warning label { display:flex; align-items:flex-start; gap:8px; font-weight:650; }
 .os-model-warning input { margin:2px 0 0; flex:0 0 auto; }
+
+/* Private firmware bridge controls */
+.os-bridge-actions { display:flex; flex-wrap:wrap; gap:7px; margin-top:10px; }
+.os-bridge-actions button, .os-build-button { border:1px solid var(--line); border-radius:9px; padding:8px 11px; background:var(--paper); color:var(--text); font:inherit; font-weight:650; cursor:pointer; }
+.os-build-button { width:100%; margin-top:9px; background:var(--blue); color:white; border-color:var(--blue); }
+.os-build-button:disabled { opacity:.45; cursor:not-allowed; }
+.os-build-status small { display:block; margin-top:8px; color:var(--mute); }
+#os-run-status { overflow-wrap:anywhere; }
+#os-run-status a { color:var(--blue); font-weight:650; }
