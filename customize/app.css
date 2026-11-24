@@ -555,3 +555,11 @@ html.intro-wait main { opacity: 0; }
 .top, .head, .chips { min-width: 0; max-width: 100%; }
 .os-config > label, .os-upload, .os-preserve { min-width: 0; overflow-wrap: anywhere; }
 .os-config .field { width: 100%; box-sizing: border-box; }
+
+/* ---- OS catalogue and model confirmation */
+.os-choice button { min-height: 118px; }
+.os-choice .os-build-mark { margin-top: auto; color: #187044; font-weight: 700; }
+.os-catalogue-note { margin: -4px 0 0; color: var(--mute); font-size: 11px; line-height: 1.45; }
+.os-model-warning { display:flex; flex-direction:column; gap:6px; padding:11px 12px; border:1px solid #e4b45b; border-radius:12px; background:#fff8e8; color:#704600; font-size:12px; line-height:1.45; }
+.os-model-warning label { display:flex; align-items:flex-start; gap:8px; font-weight:650; }
+.os-model-warning input { margin:2px 0 0; flex:0 0 auto; }
