@@ -103,10 +103,10 @@
     return Math.min(...values);
   };
   const spaces = () => {
-    const fromKit = kit.spaces && kit.spaces.length ? kit.spaces.filter((s) => s.id === 'std' || s.id === 'e26') : [];
-    const base = fromKit.length ? fromKit : [
-      { id: 'std', size: kit.appSpace },
-      { id: 'e26', size: E26_SPACE }
+    const fromKit = new Map((kit.spaces || []).map((s) => [s.id, s]));
+    const base = [
+      fromKit.get('std') || { id: 'std', size: kit.appSpace },
+      fromKit.get('e26') || { id: 'e26', size: E26_SPACE }
     ];
     const custom = customSpaceSize();
     return custom ? base.concat([{ id: 'custom', size: custom }]) : base;
