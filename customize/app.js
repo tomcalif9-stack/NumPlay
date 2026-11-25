@@ -1405,50 +1405,50 @@
       const data = await firmwareRequest('/api/runs');
       const p = $('#os-run-status');
       p.textContent = '';
-      if (!data.runs || !data.runs.length) {
-        p.textContent = 'No recent builds found.';
+      const prefix = 'NumPlay-Firmware-' + osState.style + '-' + osState.model;
+      const installer = 'NumPlay-Installer-' + osState.style + '-' + osState.model;
+      const matchingRuns = (data.runs || []).filter(run =>
+        run.status === 'completed' && run.conclusion === 'success' &&
+        (run.artifacts || []).some(a => !a.expired && (a.name === prefix || a.name === installer))
+      );
+      latest = matchingRuns.sort((a, b) => Date.parse(b.created_at || 0) - Date.parse(a.created_at || 0))[0] || null;
+      if (!latest) {
+        p.textContent = 'Aucun build réussi disponible pour ' + osState.style.toUpperCase() + ' · ' + osState.model.toUpperCase() + '. Les ZIP d’un autre OS ou modèle ne seront pas proposés.';
         await refreshFirmwareMemoryMap(null);
         return;
       }
-      latest = data.runs[0];
       const run = latest;
-      p.append('Latest build: ' + run.status + (run.conclusion ? ' · ' + run.conclusion : '') + ' · ');
+      p.append('Dernier build correspondant : ' + run.status + (run.conclusion ? ' · ' + run.conclusion : '') + ' · ');
       if (run.html_url) {
         const a = el('a', '', { href: run.html_url, target: '_blank', rel: 'noopener' });
-        a.textContent = 'Build details';
+        a.textContent = 'Détails du build';
         p.appendChild(a);
       }
-      if (run.status === 'completed' && run.conclusion === 'success') {
-        const artifacts = (run.artifacts || []).filter(a => !a.expired);
-        if (artifacts.length) {
-          const list = el('div', 'os-artifact-list');
-          const heading = el('b');
-          heading.textContent = 'Ready to download';
-          list.appendChild(heading);
-          for (const artifact of artifacts) {
-            const a = el('a', 'os-artifact-download', {
-              href: FIRMWARE_BRIDGE + '/api/artifacts/' + encodeURIComponent(artifact.id),
-              target: '_blank', rel: 'noopener'
-            });
-            a.textContent = 'Download ' + artifact.name + ' (.zip)';
-            list.appendChild(a);
-            if (artifact.expires_at) {
-              const note = el('small');
-              note.textContent = 'Available until ' + new Date(artifact.expires_at).toLocaleString();
-              list.appendChild(note);
-            }
+      const artifacts = (run.artifacts || []).filter(a => !a.expired && (a.name === prefix || a.name === installer));
+      if (artifacts.length) {
+        const list = el('div', 'os-artifact-list');
+        const heading = el('b');
+        heading.textContent = 'Téléchargements prêts pour ' + osState.style.toUpperCase() + ' · ' + osState.model.toUpperCase();
+        list.appendChild(heading);
+        for (const artifact of artifacts) {
+          const a = el('a', 'os-artifact-download', {
+            href: FIRMWARE_BRIDGE + '/api/artifacts/' + encodeURIComponent(artifact.id),
+            target: '_blank', rel: 'noopener'
+          });
+          a.textContent = 'Télécharger ' + artifact.name + ' (.zip)';
+          list.appendChild(a);
+          if (artifact.expires_at) {
+            const note = el('small');
+            note.textContent = 'Disponible jusqu’au ' + new Date(artifact.expires_at).toLocaleString();
+            list.appendChild(note);
           }
-          p.appendChild(list);
-        } else {
-          const note = el('span');
-          note.textContent = ' Build succeeded, but no downloadable files were found yet. Refresh in a moment.';
-          p.appendChild(note);
         }
+        p.appendChild(list);
       }
     } catch (e) {
-      $('#os-run-status').textContent = 'Could not retrieve build status: ' + e.message;
+      $('#os-run-status').textContent = 'Impossible de récupérer les builds : ' + e.message;
     }
-    await refreshFirmwareMemoryMap(latest && latest.status === 'completed' && latest.conclusion === 'success' ? latest.id : null);
+    await refreshFirmwareMemoryMap(latest ? latest.id : null);
   }
   async function requestFirmwareBuild() {
     if (!firmwareSignedIn || !$('#os-model-confirm').checked) return;
@@ -2471,6 +2471,7 @@
       if (st.cap === 'custom' && !customSpaceSize()) { st.cap = 'std'; render(); }
       renderOsPanel();
       renderSpaces();
+      if (firmwareSignedIn) refreshFirmwareRuns();
     });
     $('#os-model').addEventListener('change', (e) => {
       osState.model = e.target.value;
@@ -2486,6 +2487,7 @@
         render();
       }
       renderSpaces();
+      if (firmwareSignedIn) refreshFirmwareRuns();
     });
     $('#os-login').addEventListener('click', () => { location.href = FIRMWARE_BRIDGE + '/api/login'; });
     $('#os-logout').addEventListener('click', async () => {
