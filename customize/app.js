@@ -1405,11 +1405,18 @@
       const data = await firmwareRequest('/api/runs');
       const p = $('#os-run-status');
       p.textContent = '';
-      const prefix = 'NumPlay-Firmware-' + osState.style + '-' + osState.model;
-      const installer = 'NumPlay-Installer-' + osState.style + '-' + osState.model;
+      const prefixes = [
+        'NumPlay-Firmware-' + osState.style + '-' + osState.model,
+        'NumPlay-Installer-' + osState.style + '-' + osState.model
+      ];
+      // An "all" build contains every supported calculator model, including N0120/N0115/N0110.
+      if (osState.model !== 'all') {
+        prefixes.push('NumPlay-Firmware-' + osState.style + '-all');
+        prefixes.push('NumPlay-Installer-' + osState.style + '-all');
+      }
       const matchingRuns = (data.runs || []).filter(run =>
         run.status === 'completed' && run.conclusion === 'success' &&
-        (run.artifacts || []).some(a => !a.expired && (a.name === prefix || a.name === installer))
+        (run.artifacts || []).some(a => !a.expired && prefixes.includes(a.name))
       );
       latest = matchingRuns.sort((a, b) => Date.parse(b.created_at || 0) - Date.parse(a.created_at || 0))[0] || null;
       if (!latest) {
@@ -1424,7 +1431,7 @@
         a.textContent = 'Détails du build';
         p.appendChild(a);
       }
-      const artifacts = (run.artifacts || []).filter(a => !a.expired && (a.name === prefix || a.name === installer));
+      const artifacts = (run.artifacts || []).filter(a => !a.expired && prefixes.includes(a.name));
       if (artifacts.length) {
         const list = el('div', 'os-artifact-list');
         const heading = el('b');
