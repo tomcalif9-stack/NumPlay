@@ -1405,15 +1405,12 @@
       const data = await firmwareRequest('/api/runs');
       const p = $('#os-run-status');
       p.textContent = '';
-      const prefixes = [
-        'NumPlay-Firmware-' + osState.style + '-' + osState.model,
-        'NumPlay-Installer-' + osState.style + '-' + osState.model
-      ];
-      // An "all" build contains every supported calculator model, including N0120/N0115/N0110.
-      if (osState.model !== 'all') {
-        prefixes.push('NumPlay-Firmware-' + osState.style + '-all');
-        prefixes.push('NumPlay-Installer-' + osState.style + '-all');
-      }
+      // Only show the Windows installer archive to users. The firmware archive
+      // contains technical DFU/ELF files and is kept as a build artifact, not a second
+      // end-user download in Studio.
+      const prefixes = ['NumPlay-Installer-' + osState.style + '-' + osState.model];
+      // An "all" installer contains every supported calculator model.
+      if (osState.model !== 'all') prefixes.push('NumPlay-Installer-' + osState.style + '-all');
       const matchingRuns = (data.runs || []).filter(run =>
         run.status === 'completed' && run.conclusion === 'success' &&
         (run.artifacts || []).some(a => !a.expired && prefixes.includes(a.name))
@@ -1442,7 +1439,7 @@
             href: FIRMWARE_BRIDGE + '/api/artifacts/' + encodeURIComponent(artifact.id),
             target: '_blank', rel: 'noopener'
           });
-          a.textContent = 'Télécharger ' + artifact.name + ' (.zip)';
+          a.textContent = 'Télécharger l’installateur Windows (.zip)';
           list.appendChild(a);
           if (artifact.expires_at) {
             const note = el('small');
